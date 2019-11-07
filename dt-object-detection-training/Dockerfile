@@ -1,0 +1,126 @@
+# Copyright 2018 The TensorFlow Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ============================================================================
+#
+# THIS IS A GENERATED DOCKERFILE.
+#
+# This file was assembled from multiple pieces, whose use is documented
+# throughout. Please refer to the TensorFlow dockerfiles documentation
+# for more information.
+
+ARG REPO_NAME="dt-object-detection-training"
+
+ARG UBUNTU_VERSION=18.04
+
+FROM ubuntu:${UBUNTU_VERSION} as base
+
+# RUN apt-get update && apt-get install -y curl
+
+ARG USE_PYTHON_3_NOT_2
+# ARG _PY_SUFFIX=${USE_PYTHON_3_NOT_2:+3}
+ARG _PY_SUFFIX=3
+ARG PYTHON=python${_PY_SUFFIX}
+ARG PIP=pip${_PY_SUFFIX}
+
+# prevent interactive questions
+ARG DEBIAN_FRONTEND=noninteractive
+
+# See http://bugs.python.org/issue19846
+ENV LANG C.UTF-8
+ENV TZ=Europe/Zurich
+
+RUN apt-get update && apt-get install -y \
+    ${PYTHON} \
+    ${PYTHON}-pip
+
+RUN ${PIP} --no-cache-dir install --upgrade \
+    pip \
+    setuptools
+
+# Some TF tools expect a "python" binary
+RUN ln -s $(which ${PYTHON}) /usr/local/bin/python
+
+# Options:
+#   tensorflow
+#   tensorflow-gpu
+#   tf-nightly
+#   tf-nightly-gpu
+# Set --build-arg TF_PACKAGE_VERSION=1.11.0rc0 to install a specific version.
+# Installs the latest version by default.
+ARG TF_PACKAGE=tensorflow
+ARG TF_PACKAGE_VERSION=
+RUN ${PIP} install ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
+
+COPY bashrc /etc/bash.bashrc
+RUN chmod a+rwx /etc/bash.bashrc
+
+ARG REPO_PATH="/src/${REPO_NAME}"
+WORKDIR "${REPO_PATH}"
+
+# create repo directory
+RUN mkdir -p "${REPO_PATH}"
+
+# copy requirements files
+COPY ./requirements-apt.txt "${REPO_PATH}/"
+COPY ./requirements-py.txt "${REPO_PATH}/"
+
+# install apt dependencies
+RUN apt-get install -y --no-install-recommends \
+    $(awk -F: '/^[^#]/ { print $1 }' "${REPO_PATH}/"requirements-apt.txt | uniq) \
+  && rm -rf /var/lib/apt/lists/*
+
+# install python dependencies
+RUN ${PIP} install -r ${REPO_PATH}/requirements-py.txt
+
+RUN jupyter serverextension enable --py jupyter_http_over_ws
+
+# configure tensorflow
+ARG TF_PATH="${REPO_PATH}/tf"
+
+RUN mkdir -p ${TF_PATH}/tensorflow-tutorials && chmod -R a+rwx ${TF_PATH}/
+RUN mkdir /.local && chmod a+rwx /.local
+WORKDIR ${TF_PATH}/tensorflow-tutorials
+RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/classification.ipynb
+RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/overfit_and_underfit.ipynb
+RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/regression.ipynb
+RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/save_and_load.ipynb
+RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/text_classification.ipynb
+RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/text_classification_with_hub.ipynb
+
+WORKDIR ${TF_PATH}
+
+# Install tensorflow models object detection
+RUN git clone https://github.com/tensorflow/models ${TF_PATH}/models
+
+# install COCO API
+RUN git clone https://github.com/cocodataset/cocoapi.git /tmp
+WORKDIR /tmp
+RUN make
+RUN cp -r pycocotools ${TF_PATH}/models/research/
+
+# From tensorflow/models/research/
+WORKDIR ${TF_PATH}/models/research
+RUN protoc object_detection/protos/*.proto --python_out=.
+RUN export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
+
+
+RUN apt-get autoremove -y
+
+WORKDIR ${TF_PATH}
+EXPOSE 8888
+
+RUN ${PYTHON} -m ipykernel.kernelspec
+
+
+CMD ["bash", "-c", "source /etc/bash.bashrc && jupyter notebook --notebook-dir=${TF_PATH} --ip 0.0.0.0 --no-browser --allow-root"]

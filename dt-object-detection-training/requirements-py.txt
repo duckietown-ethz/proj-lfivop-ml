@@ -1,0 +1,9 @@
+contextlib2
+Cython
+jupyter
+jupyter_http_over_ws
+lxml
+matplotlib
+pillow
+tensorflow==2.0.0
+

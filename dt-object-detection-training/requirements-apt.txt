@@ -1,0 +1,6 @@
+curl
+protobuf-compiler
+python-lxml
+python-pil
+python-tk
+wget
