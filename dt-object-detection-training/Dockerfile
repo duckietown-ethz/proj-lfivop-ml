@@ -19,8 +19,6 @@
 # throughout. Please refer to the TensorFlow dockerfiles documentation
 # for more information.
 
-ARG REPO_NAME="dt-object-detection-training"
-
 ARG UBUNTU_VERSION=18.04
 
 FROM ubuntu:${UBUNTU_VERSION} as base
@@ -65,11 +63,13 @@ RUN ${PIP} install ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
 COPY bashrc /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
 
+ARG REPO_NAME="dt-object-detection-training"
 ARG REPO_PATH="/src/${REPO_NAME}"
-WORKDIR "${REPO_PATH}"
 
 # create repo directory
 RUN mkdir -p "${REPO_PATH}"
+
+WORKDIR "${REPO_PATH}"
 
 # copy requirements files
 COPY ./requirements-apt.txt "${REPO_PATH}/"
@@ -104,8 +104,8 @@ WORKDIR ${TF_PATH}
 RUN git clone https://github.com/tensorflow/models ${TF_PATH}/models
 
 # install COCO API
-RUN git clone https://github.com/cocodataset/cocoapi.git /tmp
-WORKDIR /tmp
+RUN git clone https://github.com/cocodataset/cocoapi.git /tmp/coco
+WORKDIR /tmp/coco
 RUN make
 RUN cp -r pycocotools ${TF_PATH}/models/research/
 

@@ -1,4 +1,5 @@
 curl
+git
 protobuf-compiler
 python-lxml
 python-pil
