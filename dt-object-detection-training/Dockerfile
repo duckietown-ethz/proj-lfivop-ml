@@ -102,7 +102,7 @@ RUN cp -r pycocotools ${TF_PATH}/models/research/
 WORKDIR ${TF_PATH}/models/research
 RUN protoc object_detection/protos/*.proto --python_out=.
 RUN export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
-${PYTHON} setup.py install
+RUN ${PYTHON} setup.py install
 
 RUN apt-get autoremove -y
 
