@@ -91,7 +91,8 @@ WORKDIR ${TF_PATH}
 
 # Install tensorflow models object detection
 RUN git clone https://github.com/tensorflow/models ${TF_PATH}/models
-RUN git checkout "tags/v1.13.0
+WORKDIR ${TF_PATH}/models
+RUN git checkout "tags/v1.13.0"
 
 # install COCO API
 RUN git clone https://github.com/cocodataset/cocoapi.git /tmp/cocoapi
