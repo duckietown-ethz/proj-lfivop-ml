@@ -104,8 +104,8 @@ WORKDIR ${TF_PATH}
 RUN git clone https://github.com/tensorflow/models ${TF_PATH}/models
 
 # install COCO API
-RUN git clone https://github.com/cocodataset/cocoapi.git /tmp/coco
-WORKDIR /tmp/coco
+RUN git clone https://github.com/cocodataset/cocoapi.git /tmp/cocoapi
+WORKDIR /tmp/cocoapi/PythonAPI
 RUN make
 RUN cp -r pycocotools ${TF_PATH}/models/research/
 

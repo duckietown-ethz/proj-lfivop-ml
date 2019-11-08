@@ -1,5 +1,6 @@
 curl
 git
+gnutls-bin
 protobuf-compiler
 python-lxml
 python-pil
