@@ -18,14 +18,14 @@ class ImageAnnotationToTFR():
         self.annotation_csv_path = self.data_folder+'Annotations.csv'
         self.original_images_folder = self.data_folder+'images/'
         self.writer = writer
-        self.duckie_classes = {'Duckie':0,
-			'Duckiebot':1,
-			'Traffic light':2,
-			'QR code':3,
-			'Stop sign':4,
-			'Intersection sign':5,
-			'Traffic light':6,
-			'Signal sign':7,}
+        self.duckie_classes = {'Duckie':1,
+			'Duckiebot':2,
+			'Traffic light':3,
+			'QR code':4,
+			'Stop sign':5,
+			'Intersection sign':6,
+			'Traffic light':7,
+			'Signal sign':8,}
         
     def run(self):
         with open(self.annotation_csv_path) as csv_file:
