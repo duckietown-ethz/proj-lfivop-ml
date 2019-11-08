@@ -28,7 +28,7 @@ FROM ubuntu:${UBUNTU_VERSION} as base
 ARG USE_PYTHON_3_NOT_2
 # ARG _PY_SUFFIX=${USE_PYTHON_3_NOT_2:+3}
 ARG _PY_SUFFIX=3
-ARG PYTHON=python${_PY_SUFFIX}
+ENV PYTHON=python${_PY_SUFFIX}
 ARG PIP=pip${_PY_SUFFIX}
 
 # prevent interactive questions
@@ -64,7 +64,7 @@ COPY bashrc /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
 
 ARG REPO_NAME="dt-object-detection-training"
-ARG REPO_PATH="/src/${REPO_NAME}"
+ENV REPO_PATH="/src/${REPO_NAME}"
 
 # create repo directory
 RUN mkdir -p "${REPO_PATH}"
@@ -86,18 +86,7 @@ RUN ${PIP} install -r ${REPO_PATH}/requirements-py.txt
 RUN jupyter serverextension enable --py jupyter_http_over_ws
 
 # configure tensorflow
-ARG TF_PATH="${REPO_PATH}/tf"
-
-RUN mkdir -p ${TF_PATH}/tensorflow-tutorials && chmod -R a+rwx ${TF_PATH}/
-RUN mkdir /.local && chmod a+rwx /.local
-WORKDIR ${TF_PATH}/tensorflow-tutorials
-RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/classification.ipynb
-RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/overfit_and_underfit.ipynb
-RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/regression.ipynb
-RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/save_and_load.ipynb
-RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/text_classification.ipynb
-RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/text_classification_with_hub.ipynb
-
+ENV TF_PATH="${REPO_PATH}/tf"
 WORKDIR ${TF_PATH}
 
 # Install tensorflow models object detection
@@ -113,7 +102,7 @@ RUN cp -r pycocotools ${TF_PATH}/models/research/
 WORKDIR ${TF_PATH}/models/research
 RUN protoc object_detection/protos/*.proto --python_out=.
 RUN export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
-
+${PYTHON} setup.py install
 
 RUN apt-get autoremove -y
 
@@ -122,5 +111,28 @@ EXPOSE 8888
 
 RUN ${PYTHON} -m ipykernel.kernelspec
 
+# install tutorials
+RUN mkdir -p ${TF_PATH}/tensorflow-tutorials && chmod -R a+rwx ${TF_PATH}/
+RUN mkdir /.local && chmod a+rwx /.local
+WORKDIR ${TF_PATH}/tensorflow-tutorials
+RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/classification.ipynb
+RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/overfit_and_underfit.ipynb
+RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/regression.ipynb
+RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/save_and_load.ipynb
+RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/text_classification.ipynb
+RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/text_classification_with_hub.ipynb
+RUN wget https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/object_detection_tutorial.ipynb
 
-CMD ["bash", "-c", "source /etc/bash.bashrc && jupyter notebook --notebook-dir=${TF_PATH} --ip 0.0.0.0 --no-browser --allow-root"]
+# copy the source code
+COPY . "${REPO_PATH}/"
+
+# define launch script
+ENV LAUNCHFILE "${REPO_PATH}/launch.sh"
+RUN chmod a+rwx ${LAUNCHFILE}
+
+# define command
+# CMD ["bash", "-c", "source /etc/bash.bashrc &&  && jupyter notebook --notebook-dir=${TF_PATH} --ip 0.0.0.0 --no-browser --allow-root"]
+CMD ["bash", "-c", "source /etc/bash.bashrc && ${LAUNCHFILE}"]
+
+# maintainer
+LABEL maintainer="Maximilian Stoelzle (maximilian@stoelzle.ch)"
