@@ -1,0 +1,5 @@
+# LIST YOUR APT PACKAGES HERE
+software-properties-common
+wget
+apt-transport-https
+gcc-4.9
