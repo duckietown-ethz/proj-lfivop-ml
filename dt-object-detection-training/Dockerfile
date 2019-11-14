@@ -23,8 +23,6 @@ ARG UBUNTU_VERSION=18.04
 
 FROM ubuntu:${UBUNTU_VERSION} as base
 
-# RUN apt-get update && apt-get install -y curl
-
 ARG USE_PYTHON_3_NOT_2
 # ARG _PY_SUFFIX=${USE_PYTHON_3_NOT_2:+3}
 ARG _PY_SUFFIX=3
@@ -57,7 +55,7 @@ RUN ln -s $(which ${PYTHON}) /usr/local/bin/python
 # Set --build-arg TF_PACKAGE_VERSION=1.11.0rc0 to install a specific version.
 # Installs the latest version by default.
 ARG TF_PACKAGE=tensorflow
-ARG TF_PACKAGE_VERSION=1.13.2
+ARG TF_PACKAGE_VERSION="1.15.0"
 RUN ${PIP} install ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
 
 COPY bashrc /etc/bash.bashrc
@@ -91,8 +89,8 @@ WORKDIR ${TF_PATH}
 
 # Install tensorflow models object detection
 RUN git clone https://github.com/tensorflow/models ${TF_PATH}/models
-WORKDIR ${TF_PATH}/models
-RUN git checkout "tags/v1.13.0"
+# WORKDIR ${TF_PATH}/models
+# RUN git checkout "tags/v1.13.0"
 
 # install COCO API
 RUN git clone https://github.com/cocodataset/cocoapi.git /tmp/cocoapi
@@ -127,6 +125,11 @@ RUN wget https://raw.githubusercontent.com/tensorflow/models/master/research/obj
 
 # copy the source code
 COPY . "${REPO_PATH}/"
+
+# create log dirs
+ENV LOG_PATH="${REPO_PATH}/logs/"
+RUN mkdir -p ${LOG_PATH}
+
 
 # define launch script
 ENV LAUNCHFILE "${REPO_PATH}/launch.sh"

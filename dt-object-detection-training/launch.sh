@@ -1,5 +1,7 @@
 export TF_OBJDET_PATH="/models/research/object_detection"
 
+${PYTHON} ${REPO_PATH}/tf_test.py
+
 # From the tensorflow/models/research/ directory
 cd "${TF_PATH}/models/research"
 MODEL_DIR="${REPO_PATH}/models/dt-object-detection-model"
