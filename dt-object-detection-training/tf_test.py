@@ -1,3 +1,3 @@
 import tensorflow as tf
 
-print(tf.__version__)
+print("Using TensorFlow version: "+str(tf.__version__))
