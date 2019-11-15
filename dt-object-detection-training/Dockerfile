@@ -120,16 +120,16 @@ EXPOSE 8888
 RUN ${PYTHON} -m ipykernel.kernelspec
 
 # install tutorials
-RUN mkdir -p ${TF_PATH}/tensorflow-tutorials && chmod -R a+rwx ${TF_PATH}/
-RUN mkdir /.local && chmod a+rwx /.local
-WORKDIR ${TF_PATH}/tensorflow-tutorials
-RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/classification.ipynb
-RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/overfit_and_underfit.ipynb
-RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/regression.ipynb
-RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/save_and_load.ipynb
-RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/text_classification.ipynb
-RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/text_classification_with_hub.ipynb
-RUN wget https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/object_detection_tutorial.ipynb
+# RUN mkdir -p ${TF_PATH}/tensorflow-tutorials && chmod -R a+rwx ${TF_PATH}/
+# RUN mkdir /.local && chmod a+rwx /.local
+# WORKDIR ${TF_PATH}/tensorflow-tutorials
+# RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/classification.ipynb
+# RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/overfit_and_underfit.ipynb
+# RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/regression.ipynb
+# RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/save_and_load.ipynb
+# RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/text_classification.ipynb
+# RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/text_classification_with_hub.ipynb
+# RUN wget https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/object_detection_tutorial.ipynb
 
 
 WORKDIR ${REPO_PATH}
