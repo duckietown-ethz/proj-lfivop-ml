@@ -110,7 +110,8 @@ RUN protoc object_detection/protos/*.proto --python_out=.
 RUN export PYTHONPATH="$PYTHONPATH:${TF_MODELS_RESEARCH_PATH}:${TF_MODELS_RESEARCH_PATH}/slim:${TF_MODELS_RESEARCH_PATH}/object_detection"
 RUN ${PYTHON} setup.py build
 RUN ${PYTHON} setup.py install
-RUN ${PYTHON} slim/setup.py install
+WORKDIR ${TF_MODELS_RESEARCH_PATH}/slim
+RUN ${PYTHON} setup.py install
 
 RUN apt-get autoremove -y
 
