@@ -97,6 +97,8 @@ RUN git clone https://github.com/tensorflow/models ${TF_PATH}/models
 RUN git clone https://github.com/cocodataset/cocoapi.git /tmp/cocoapi
 WORKDIR /tmp/cocoapi/PythonAPI
 RUN make
+RUN make install
+RUN ${PYTHON} setup.py install
 RUN cp -r pycocotools ${TF_MODELS_RESEARCH_PATH}
 
 # From tensorflow/models/research/
