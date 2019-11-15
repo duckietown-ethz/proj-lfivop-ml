@@ -136,10 +136,6 @@ WORKDIR ${REPO_PATH}
 # copy the source code
 COPY . "${REPO_PATH}/"
 
-# create log dirs
-ENV LOG_PATH="${REPO_PATH}/logs/"
-RUN mkdir -p ${LOG_PATH}
-
 # create repo directories
 RUN mkdir -p "${REPO_PATH}/data"
 ENV MODEL_PATH="${REPO_PATH}/models/${MODEL_NAME}"
