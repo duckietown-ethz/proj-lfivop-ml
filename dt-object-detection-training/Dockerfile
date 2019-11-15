@@ -64,6 +64,8 @@ RUN chmod a+rwx /etc/bash.bashrc
 ARG REPO_NAME="dt-object-detection-training"
 ENV REPO_PATH="/src/${REPO_NAME}"
 
+ARG MODEL_NAME="ssdlite_mobilenet_v2_coco"
+
 # create repo directory
 RUN mkdir -p "${REPO_PATH}"
 
@@ -137,6 +139,12 @@ COPY . "${REPO_PATH}/"
 ENV LOG_PATH="${REPO_PATH}/logs/"
 RUN mkdir -p ${LOG_PATH}
 
+# create repo directories
+RUN mkdir -p "${REPO_PATH}/data"
+ENV MODEL_PATH="${REPO_PATH}/models/${MODEL_NAME}"
+RUN echo "SET MODEL_PATH to: ${MODEL_PATH}"
+RUN mkdir -p "${MODEL_PATH}/eval"
+RUN mkdir -p "${MODEL_PATH}/train"
 
 # define launch script
 ENV LAUNCHFILE "${REPO_PATH}/launch.sh"

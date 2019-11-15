@@ -8,10 +8,10 @@ We use Docker to run our scripts. Please execute these command in this directory
 ### Run
 Place `mscoco_train.record` into your local `data` directory, then run:
 
-`docker run -it -p 8888:8888 -v YOUR_LOCAL_DATA_DIR:/data dt-object-detection-training:latest`
+`docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_DATA_DIR:/src/dt-object-detection-training/data dt-object-detection-training:latest`
 
 ## Run with volume sharing (Maxi)
-`docker run -it -p 8888:8888 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/data:/data dt-object-detection-training:latest`
+`docker run -it -p 8888:8888 -p 6006:6006 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/data/dt-object-detection-training:/src/dt-object-detection-training/data dt-object-detection-training:latest`
 
 ### Run container interactively
-`docker run -it -p 8888:8888 dt-object-detection-training:latest /bin/bash`
+`docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_DATA_DIR:/src/dt-object-detection-training/data dt-object-detection-training:latest /bin/bash`
