@@ -133,9 +133,9 @@ class ObjectLocationWeightingVisualizer:
         self.mu_weight_r = BC_ground['x']
         print('setted mu of weight r to: '+str(self.mu_weight_r)+'m')
 
-        self.amplitude_weight_r = 10
+        self.amplitude_weight_r = 3
         self.sigma_weight_r = 1.5*self.d_brake
-        self.amplitude_weight_phi = 5
+        self.amplitude_weight_phi = 2
         self.sigma_weight_phi = 60 # degree
 
     def weight_object_location(self, pixel):
