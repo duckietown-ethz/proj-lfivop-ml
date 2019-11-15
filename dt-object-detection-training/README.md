@@ -15,3 +15,7 @@ Place `mscoco_train.record` into your local `data` directory, then run:
 
 ### Run container interactively
 `docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_DATA_DIR:/src/dt-object-detection-training/data dt-object-detection-training:latest /bin/bash`
+
+## TensorBoard
+While running the container, you can access the TensorBoard to survey the training progress:
+http://localhost:6006/

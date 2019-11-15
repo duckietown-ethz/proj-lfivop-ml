@@ -8,6 +8,15 @@ cd "${TF_PATH}/models/research"
 echo "RUN TF ModelBuilder test"
 ${PYTHON} object_detection/builders/model_builder_test.py
 
+echo "RUN TensorBoard"
+tensorboard --logdir="${MODEL_PATH}" &
+
+# set TensorFlow logging settings
+# 0 = all messages are logged (default behavior)
+# 1 = INFO messages are not printed
+# 2 = INFO and WARNING messages are not printed
+# 3 = INFO, WARNING, and ERROR messages are not printed
+export TF_CPP_MIN_LOG_LEVEL=2
 
 echo "RUN TF training with the ${MODEL_NAME} model"
 PIPELINE_CONFIG_PATH="${MODEL_PATH}/pipeline.config"
