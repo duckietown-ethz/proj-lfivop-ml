@@ -148,7 +148,10 @@ class ObjectLocationWeightingVisualizer:
             weight_r = self.get_weight_r(cylinder_point['r'])
             weight_phi = self.get_weight_phi(cylinder_point['phi'])
 
-            weight = weight_r * weight_phi
+            weight_candidate = weight_r * weight_phi
+
+            # we won't let the weight drop below 1
+            weight = max(weight_candidate,1)
 
         return weight
 
