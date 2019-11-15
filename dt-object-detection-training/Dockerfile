@@ -85,6 +85,7 @@ RUN jupyter serverextension enable --py jupyter_http_over_ws
 
 # configure tensorflow
 ENV TF_PATH="${REPO_PATH}/tf"
+ENV TF_MODELS_RESEARCH_PATH="${TF_PATH}/models/research"
 WORKDIR ${TF_PATH}
 
 # Install tensorflow models object detection
@@ -96,12 +97,14 @@ RUN git clone https://github.com/tensorflow/models ${TF_PATH}/models
 RUN git clone https://github.com/cocodataset/cocoapi.git /tmp/cocoapi
 WORKDIR /tmp/cocoapi/PythonAPI
 RUN make
-RUN cp -r pycocotools ${TF_PATH}/models/research/
+RUN cp -r pycocotools ${TF_MODELS_RESEARCH_PATH}
 
 # From tensorflow/models/research/
-WORKDIR ${TF_PATH}/models/research
+WORKDIR ${TF_MODELS_RESEARCH_PATH}
 RUN protoc object_detection/protos/*.proto --python_out=.
-RUN export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
+RUN export PYTHONPATH="$PYTHONPATH:${TF_MODELS_RESEARCH_PATH}/slim"
+RUN ${PYTHON} setup.py install
+WORKDIR ${TF_MODELS_RESEARCH_PATH}/slim
 RUN ${PYTHON} setup.py install
 
 RUN apt-get autoremove -y
