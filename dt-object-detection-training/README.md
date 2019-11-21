@@ -4,7 +4,10 @@ We use Docker to run our scripts. Please execute these command in this directory
 
 **Important:** Don't forget to increase the allocated memory and swap-storage of docker, otherwise TensorFlow will get killed
 ### Build
-`docker build -f ./Dockerfile -t dt-object-detection-training:latest .`
+Build CPU version:
+`docker build -f ./Dockerfile -t mstoelzle/dt-object-detection-training:latest .`
+Build GPU version:
+`docker build --build-arg GPU=-gpu -f ./Dockerfile -t mstoelzle/dt-object-detection-training:latest-gpu .`
 ### Run
 Place `mscoco_train.record` into your local `data` directory, then run:
 
@@ -19,11 +22,11 @@ Place `mscoco_train.record` into your local `data` directory, then run:
 ### Run on IDSC RUDOLF
 Build:
 
-`docker build -f ./Dockerfile -t mstoelzle/dt-object-detection-training:latest .`
+`docker build --build-arg GPU=-gpu -f ./Dockerfile -t mstoelzle/dt-object-detection-training:latest-gpu .`
 
 Push to Docker Hub:
 
-`docker push mstoelzle/dt-object-detection-training:latest`
+`docker push mstoelzle/dt-object-detection-training:latest-gpu`
 
 Copy `mscoco_train.record` into `data` directory:
 
@@ -35,7 +38,7 @@ SSH into IDSC Rudolf:
 
 Run docker container:
 
-`docker run -it -p 8888:8888 -p 6006:6006 -v /home/lfivop-ml/data/dt-object-detection-training:/src/dt-object-detection-training/data mstoelzle/dt-object-detection-training:latest`
+`docker run -it -p 8888:8888 -p 6006:6006 -v /home/lfivop-ml/data/dt-object-detection-training:/src/dt-object-detection-training/data mstoelzle/dt-object-detection-training:latest-gpu`
 
 
 ## TensorBoard
