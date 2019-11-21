@@ -11,13 +11,14 @@ Build GPU version:
 ### Run
 Place `mscoco_train.record` into your local `data` directory, then run:
 
-`docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_DATA_DIR/dt-object-detection-training:/src/dt-object-detection-training/data dt-object-detection-training:latest`
+`docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_DATA_DIR/dt-object-detection-training:/src/dt-object-detection-training/data mstoelzle/dt-object-detection-training:latest`
 
-#### Run with volume sharing (Maxi)
-`docker run -it -p 8888:8888 -p 6006:6006 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/data/dt-object-detection-training:/src/dt-object-detection-training/data dt-object-detection-training:latest`
+Run with volume sharing (Maxi)
+
+`docker run -it -p 8888:8888 -p 6006:6006 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/data/dt-object-detection-training:/src/dt-object-detection-training/data mstoelzle/dt-object-detection-training:latest`
 
 ### Run container interactively
-`docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_DATA_DIR:/src/dt-object-detection-training/data dt-object-detection-training:latest /bin/bash`
+`docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_DATA_DIR:/src/dt-object-detection-training/data mstoelzle/dt-object-detection-training:latest /bin/bash`
 
 ### Run on IDSC RUDOLF
 Build:
@@ -34,13 +35,18 @@ Copy `mscoco_train.record` into `data` directory:
 
 SSH into IDSC Rudolf:
 
-`ssh lfivop-ml@idsc-rudolf.ethz.ch -L 6006:127.0.0.1:6006`
+`ssh lfivop-ml@idsc-rudolf.ethz.ch -L 6067:127.0.0.1:6067`
+
+Specify number of GPUs:
+`export CUDA_DEVICE_ORDER=PCI_BUS_ID && export CUDA_VISIBLE_DEVICES=1`
 
 Run docker container:
 
-`docker run -it -p 8888:8888 -p 6006:6006 -v /home/lfivop-ml/data/dt-object-detection-training:/src/dt-object-detection-training/data mstoelzle/dt-object-detection-training:latest-gpu`
+`docker run -it -p 8888:8888 -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/data/dt-object-detection-training:/src/dt-object-detection-training/data mstoelzle/dt-object-detection-training:latest-gpu`
 
 
 ## TensorBoard
 While running the container, you can access the TensorBoard to survey the training progress:
 http://localhost:6006/
+
+if the training is running on Rudolf, you can access it here: http://localhost:6067/

@@ -29,7 +29,7 @@ RUN ${PIP} install "tensorboard"${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
 ARG REPO_NAME="dt-object-detection-training"
 ENV REPO_PATH="/src/${REPO_NAME}"
 
-ARG MODEL_NAME="ssdlite_mobilenet_v2_coco"
+ENV MODEL_NAME="ssdlite_mobilenet_v2_coco"
 
 # create repo directory
 RUN mkdir -p "${REPO_PATH}"
@@ -112,9 +112,12 @@ RUN mkdir -p "${MODEL_PATH}/train"
 ENV LAUNCHFILE "${REPO_PATH}/launch.sh"
 RUN chmod a+rwx ${LAUNCHFILE}
 
+# port for tensorboard
+ENV TB_PORT 6006
+
 # define command
 # CMD ["bash", "-c", "source /etc/bash.bashrc &&  && jupyter notebook --notebook-dir=${TF_PATH} --ip 0.0.0.0 --no-browser --allow-root"]
-CMD ["bash", "-c", "source /etc/bash.bashrc && ${LAUNCHFILE}; tensorboard --logdir=${MODEL_PATH}"]
+CMD ["bash", "-c", "source /etc/bash.bashrc && ${LAUNCHFILE}; tensorboard --port ${TB_PORT} --logdir=${MODEL_PATH}"]
 
 # maintainer
 LABEL maintainer="Maximilian Stoelzle (maximilian@stoelzle.ch)"
