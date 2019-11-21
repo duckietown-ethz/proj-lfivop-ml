@@ -109,16 +109,18 @@ RUN echo "SET MODEL_PATH to: ${MODEL_PATH}"
 RUN mkdir -p "${MODEL_PATH}/eval"
 RUN mkdir -p "${MODEL_PATH}/train"
 
-# define launch script
-ENV LAUNCHFILE "${REPO_PATH}/launch.sh"
-RUN chmod a+rwx ${LAUNCHFILE}
+# define launch scripts
+ENV TRAINING_LAUNCHFILE "${REPO_PATH}/launch/training_launch.sh"
+RUN chmod a+rwx ${TRAINING_LAUNCHFILE}
+ENV TENSORBOARD_LAUNCHFILE "${REPO_PATH}/launch/tensorboard_launch.sh"
+RUN chmod a+rwx ${TENSORBOARD_LAUNCHFILE}
 
 # port for tensorboard
 ENV TB_PORT 6006
 
 # define command
 # CMD ["bash", "-c", "source /etc/bash.bashrc &&  && jupyter notebook --notebook-dir=${TF_PATH} --ip 0.0.0.0 --no-browser --allow-root"]
-CMD ["bash", "-c", "source /etc/bash.bashrc && ${LAUNCHFILE}"]
+CMD ["bash", "-c", "source /etc/bash.bashrc && ${TRAINING_LAUNCHFILE}"]
 
 # maintainer
 LABEL maintainer="Maximilian Stoelzle (maximilian@stoelzle.ch)"

@@ -5,8 +5,10 @@ We use Docker to run our scripts. Please execute these command in this directory
 **Important:** Don't forget to increase the allocated memory and swap-storage of docker, otherwise TensorFlow will get killed
 ### Build
 Build CPU version:
+
 `docker build -f ./Dockerfile -t mstoelzle/dt-object-detection-training:latest .`
 Build GPU version:
+
 `docker build --build-arg GPU=-gpu -f ./Dockerfile -t mstoelzle/dt-object-detection-training:latest-gpu .`
 
 ### PREPARE TensorFlow WORKDIR
@@ -19,17 +21,21 @@ Place `mscoco_train.record` into your local `data` directory, then run:
 ### Run
 
 Run TensorBoard:
-`docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest /bin/bash tensorboard.sh`
+
+`docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard_launch.sh`
 
 Access Tensorboard: http://localhost:6006/
 
 Run Training:
+
 `docker run -it -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest`
 
 Run TensorBoard (Maxi):
-`docker run -it -p 8888:8888 -p 6006:6006 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest /bin/bash tensorboard.sh`
+
+`docker run -it -p 8888:8888 -p 6006:6006 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard_launch.sh`
 
 Run Training (Maxi):
+
 `docker run -it -v /Users/maximilianstoelzle/Documents/ethz/AMoD/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest`
 
 ### Run container interactively
@@ -62,12 +68,21 @@ Copy from localhost to RUDOLF:
 ### Run
 
 Specify number of GPUs:
+
 `export CUDA_DEVICE_ORDER=PCI_BUS_ID && export CUDA_VISIBLE_DEVICES=1`
 
+Pull docker image:
+
+`docker pull mstoelzle/dt-object-detection-training:latest-gpu`
+
 Run TensorBoard:
-`docker run -it -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest-gpu /bin/bash tensorboard.sh`
+
+`docker run -it -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest-gpu bash -c launch/tensorboard_launch.sh`
 
 Access TensorBoard: http://localhost:6067/
 
 Run Training:
+
+`ssh lfivop-ml@idsc-rudolf.ethz.ch`
+
 `docker run -it -v /home/lfivop-ml/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest-gpu`
