@@ -101,9 +101,10 @@ WORKDIR ${REPO_PATH}
 # copy the source code
 COPY . "${REPO_PATH}/"
 
-# create repo directories
-RUN mkdir -p "${REPO_PATH}/data"
-ENV MODEL_PATH="${REPO_PATH}/models/${MODEL_NAME}"
+# create workdir directories
+ENV TF_WORKDIR_PATH="/tf_workdir"
+RUN mkdir -p "${TF_WORKDIR_PATH}/data"
+ENV MODEL_PATH="${TF_WORKDIR_PATH}/models/${MODEL_NAME}"
 RUN echo "SET MODEL_PATH to: ${MODEL_PATH}"
 RUN mkdir -p "${MODEL_PATH}/eval"
 RUN mkdir -p "${MODEL_PATH}/train"
@@ -117,7 +118,7 @@ ENV TB_PORT 6006
 
 # define command
 # CMD ["bash", "-c", "source /etc/bash.bashrc &&  && jupyter notebook --notebook-dir=${TF_PATH} --ip 0.0.0.0 --no-browser --allow-root"]
-CMD ["bash", "-c", "source /etc/bash.bashrc && ${LAUNCHFILE}; tensorboard --port ${TB_PORT} --logdir=${MODEL_PATH}"]
+CMD ["bash", "-c", "source /etc/bash.bashrc && ${LAUNCHFILE}"]
 
 # maintainer
 LABEL maintainer="Maximilian Stoelzle (maximilian@stoelzle.ch)"

@@ -1,0 +1,1 @@
+tensorboard --port "${TB_PORT}" --logdir="${MODEL_PATH}"

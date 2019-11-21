@@ -1,5 +1,5 @@
 # Duckietown Object Detection ML Training
-## Docker
+## LOCALHOST
 We use Docker to run our scripts. Please execute these command in this directory.
 
 **Important:** Don't forget to increase the allocated memory and swap-storage of docker, otherwise TensorFlow will get killed
@@ -8,20 +8,36 @@ Build CPU version:
 `docker build -f ./Dockerfile -t mstoelzle/dt-object-detection-training:latest .`
 Build GPU version:
 `docker build --build-arg GPU=-gpu -f ./Dockerfile -t mstoelzle/dt-object-detection-training:latest-gpu .`
-### Run
+
+### PREPARE TensorFlow WORKDIR
 Place `mscoco_train.record` into your local `data` directory, then run:
 
-`docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_DATA_DIR/dt-object-detection-training:/src/dt-object-detection-training/data mstoelzle/dt-object-detection-training:latest`
+1. Create `tf_workdir` directory somewhere on your local drive
+2. Copy contents of `tf_wordir_sample directory` from REPO into local `tf_workdir`
+3. Place `mscoco_train.record` into `tf_workdir/data` directory
 
-Run with volume sharing (Maxi)
+### Run
 
-`docker run -it -p 8888:8888 -p 6006:6006 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/data/dt-object-detection-training:/src/dt-object-detection-training/data mstoelzle/dt-object-detection-training:latest`
+Run TensorBoard:
+`docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest /bin/bash tensorboard.sh`
+
+Access Tensorboard: http://localhost:6006/
+
+Run Training:
+`docker run -it -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest`
+
+Run TensorBoard (Maxi):
+`docker run -it -p 8888:8888 -p 6006:6006 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest /bin/bash tensorboard.sh`
+
+Run Training (Maxi):
+`docker run -it -v /Users/maximilianstoelzle/Documents/ethz/AMoD/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest`
 
 ### Run container interactively
-`docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_DATA_DIR:/src/dt-object-detection-training/data mstoelzle/dt-object-detection-training:latest /bin/bash`
+`docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest /bin/bash`
 
-### Run on IDSC RUDOLF
-Build:
+## IDSC RUDOLF
+### Build:
+Build on localhost for GPU:
 
 `docker build --build-arg GPU=-gpu -f ./Dockerfile -t mstoelzle/dt-object-detection-training:latest-gpu .`
 
@@ -29,24 +45,29 @@ Push to Docker Hub:
 
 `docker push mstoelzle/dt-object-detection-training:latest-gpu`
 
-Copy `mscoco_train.record` into `data` directory:
-
-`scp -r YOUR_LOCAL_DATA_DIR/dt-object-detection-training lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/data`
+### PREPARE TensorFlow WORKDIR
 
 SSH into IDSC Rudolf:
 
 `ssh lfivop-ml@idsc-rudolf.ethz.ch -L 6067:127.0.0.1:6067`
 
+1. Create `tf_workdir` directory in home directory of RUDOLF account
+2. Copy contents of `tf_wordir_sample directory` from REPO into  `tf_workdir`
+3. Place `mscoco_train.record` into `tf_workdir/data` directory
+
+Copy from localhost to RUDOLF:
+
+`scp -r YOUR_LOCAL_TF_WORKDIR/ lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/tf_workdir/`
+
+### Run
+
 Specify number of GPUs:
 `export CUDA_DEVICE_ORDER=PCI_BUS_ID && export CUDA_VISIBLE_DEVICES=1`
 
-Run docker container:
+Run TensorBoard:
+`docker run -it -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest-gpu /bin/bash tensorboard.sh`
 
-`docker run -it -p 8888:8888 -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/data/dt-object-detection-training:/src/dt-object-detection-training/data mstoelzle/dt-object-detection-training:latest-gpu`
+Access TensorBoard: http://localhost:6067/
 
-
-## TensorBoard
-While running the container, you can access the TensorBoard to survey the training progress:
-http://localhost:6006/
-
-if the training is running on Rudolf, you can access it here: http://localhost:6067/
+Run Training:
+`docker run -it -v /home/lfivop-ml/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest-gpu`

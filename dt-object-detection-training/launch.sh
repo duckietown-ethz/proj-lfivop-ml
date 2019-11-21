@@ -1,5 +1,3 @@
-export TF_OBJDET_PATH="/models/research/object_detection"
-
 ${PYTHON} ${REPO_PATH}/tf_test.py
 
 # From the tensorflow/models/research/ directory
@@ -7,9 +5,6 @@ cd "${TF_PATH}/models/research"
 
 echo "RUN TF ModelBuilder test"
 ${PYTHON} object_detection/builders/model_builder_test.py
-
-echo "RUN TensorBoard on port ${TB_PORT}"
-tensorboard --port "${TB_PORT}" --logdir="${MODEL_PATH}" &
 
 # set TensorFlow logging settings
 # 0 = all messages are logged (default behavior)

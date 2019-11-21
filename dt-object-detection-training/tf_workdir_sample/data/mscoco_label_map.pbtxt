@@ -1,0 +1,45 @@
+item {
+  name: "duckie"
+  id: 1
+  display_name: "Duckie"
+}
+item {
+  name: "duckiebot"
+  id: 2
+  display_name: "Duckiebot"
+}
+item {
+  name: "traffic_light"
+  id: 3
+  display_name: "Traffic light"
+}
+item {
+  name: "qr_code"
+  id: 4
+  display_name: "QR code"
+}
+item {
+  name: "stop_sign"
+  id: 5
+  display_name: "Stop sign"
+}
+item {
+  name: "intersection_sign"
+  id: 6
+  display_name: "Intersection sign"
+}
+item {
+  name: "intersection_sign"
+  id: 6
+  display_name: "Intersection sign"
+}
+item {
+  name: "traffic_light"
+  id: 7
+  display_name: "Traffic light"
+}
+item {
+  name: "signal_sign"
+  id: 8
+  display_name: "Signal sign"
+}
