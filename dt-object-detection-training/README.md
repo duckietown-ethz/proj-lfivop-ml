@@ -7,11 +7,12 @@ We use Docker to run our scripts. Please execute these command in this directory
 Build CPU version:
 
 `docker build -f ./Dockerfile -t mstoelzle/dt-object-detection-training:latest .`
+
 Build GPU version:
 
 `docker build --build-arg GPU=-gpu -f ./Dockerfile -t mstoelzle/dt-object-detection-training:latest-gpu .`
 
-### PREPARE TensorFlow WORKDIR
+### Prepare TensorFlow WORKDIR
 Place `mscoco_train.record` into your local `data` directory, then run:
 
 1. Create `tf_workdir` directory somewhere on your local drive
@@ -36,7 +37,7 @@ Run TensorBoard (Maxi):
 
 Run Training (Maxi):
 
-`docker run -it -v /Users/maximilianstoelzle/Documents/ethz/AMoD/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest`
+`docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest /bin/bash`
 
 ### Run container interactively
 `docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest /bin/bash`
@@ -51,7 +52,7 @@ Push to Docker Hub:
 
 `docker push mstoelzle/dt-object-detection-training:latest-gpu`
 
-### PREPARE TensorFlow WORKDIR
+### Prepare TensorFlow WORKDIR
 
 SSH into IDSC Rudolf:
 
