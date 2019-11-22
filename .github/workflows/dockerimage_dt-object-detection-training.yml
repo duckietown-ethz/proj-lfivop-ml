@@ -15,4 +15,4 @@ jobs:
     - name: Build the Docker image
       run: docker build -t mstoelzle/dt-object-detection-training:latest dt-object-detection-training/
     - name: Push the Docker image
-      run: docker push dt-object-detection-training
+      run: docker push mstoelzle/dt-object-detection-training:latest
