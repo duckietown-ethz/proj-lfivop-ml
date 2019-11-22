@@ -68,10 +68,6 @@ Copy from localhost to RUDOLF:
 
 ### Run
 
-Specify number of GPUs:
-
-`export CUDA_DEVICE_ORDER=PCI_BUS_ID && export CUDA_VISIBLE_DEVICES=1`
-
 Pull docker image:
 
 `docker pull mstoelzle/dt-object-detection-training:latest-gpu`
@@ -86,7 +82,7 @@ Run Training:
 
 `ssh lfivop-ml@idsc-rudolf.ethz.ch`
 
-`docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -v /home/lfivop-ml/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest-gpu`
+`docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CUDA_VISIBLE_DEVICES=2 -v /home/lfivop-ml/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest-gpu`
 
 ### export training checkpoints
 

@@ -112,6 +112,10 @@ RUN chmod a+rwx ${TENSORBOARD_LAUNCHFILE}
 # port for tensorboard
 ENV TB_PORT 6006
 
+# CUDA GPU config
+ENV CUDA_DEVICE_ORDER="PCI_BUS_ID"
+ENV CUDA_VISIBLE_DEVICES=1
+
 # define command
 # CMD ["bash", "-c", "source /etc/bash.bashrc &&  && jupyter notebook --notebook-dir=${TF_PATH} --ip 0.0.0.0 --no-browser --allow-root"]
 CMD ["bash", "-c", "source /etc/bash.bashrc && ${TRAINING_LAUNCHFILE}"]
