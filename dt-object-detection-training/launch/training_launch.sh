@@ -1,5 +1,12 @@
 ${PYTHON} ${REPO_PATH}/tf_test.py
 
+# set model path
+export MODEL_PATH="${TF_WORKDIR_PATH}/models/${MODEL_NAME}"
+echo "SET MODEL_PATH to: ${MODEL_PATH}"
+# create model directories
+mkdir -p "${MODEL_PATH}/eval"
+mkdir -p "${MODEL_PATH}/train"
+
 # From the tensorflow/models/research/ directory
 cd "${TF_PATH}/models/research"
 

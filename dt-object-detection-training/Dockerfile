@@ -101,13 +101,7 @@ WORKDIR ${REPO_PATH}
 # copy the source code
 COPY . "${REPO_PATH}/"
 
-# create workdir directories
 ENV TF_WORKDIR_PATH="/tf_workdir"
-RUN mkdir -p "${TF_WORKDIR_PATH}/data"
-ENV MODEL_PATH="${TF_WORKDIR_PATH}/models/${MODEL_NAME}"
-RUN echo "SET MODEL_PATH to: ${MODEL_PATH}"
-RUN mkdir -p "${MODEL_PATH}/eval"
-RUN mkdir -p "${MODEL_PATH}/train"
 
 # define launch scripts
 ENV TRAINING_LAUNCHFILE "${REPO_PATH}/launch/training_launch.sh"

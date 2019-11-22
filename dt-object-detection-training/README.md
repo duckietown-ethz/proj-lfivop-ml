@@ -86,4 +86,4 @@ Run Training:
 
 `ssh lfivop-ml@idsc-rudolf.ethz.ch`
 
-`docker run -it -v /home/lfivop-ml/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest-gpu`
+`docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -v /home/lfivop-ml/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest-gpu`
