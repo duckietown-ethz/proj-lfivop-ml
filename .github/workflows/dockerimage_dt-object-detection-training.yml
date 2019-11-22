@@ -1,0 +1,14 @@
+name: docker image dt-object-detection-training
+
+on: [push]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build the Docker image
+      run: docker build -t mstoelzle/dt-object-detection-training:latest dt-object-detection-training/
