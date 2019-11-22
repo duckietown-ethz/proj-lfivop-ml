@@ -56,7 +56,9 @@ ENV TF_MODELS_RESEARCH_PATH="${TF_PATH}/models/research"
 WORKDIR ${TF_PATH}
 
 # Install tensorflow models object detection
-RUN git clone https://github.com/tensorflow/models ${TF_PATH}/models
+# RUN git clone https://github.com/tensorflow/models ${TF_PATH}/models
+# we want to debug and change some stuff
+RUN git clone https://github.com/mstoelzle/tensorflow-models ${TF_PATH}/models
 # WORKDIR ${TF_PATH}/models
 # RUN git checkout "tags/v1.13.0"
 
