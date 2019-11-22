@@ -78,7 +78,7 @@ Pull docker image:
 
 Run TensorBoard:
 
-`docker run -it -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest-gpu bash -c launch/tensorboard_launch.sh`
+`docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest-gpu bash -c launch/tensorboard_launch.sh`
 
 Access TensorBoard: http://localhost:6067/
 
@@ -87,3 +87,7 @@ Run Training:
 `ssh lfivop-ml@idsc-rudolf.ethz.ch`
 
 `docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -v /home/lfivop-ml/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest-gpu`
+
+### export training checkpoints
+
+`scp -r lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/tf_workdir/ YOUR_LOCAL_TF_WORKDIR/`
