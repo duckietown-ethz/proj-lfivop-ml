@@ -1,4 +1,4 @@
-${PYTHON} ${REPO_PATH}/tf_test.py
+${PYTHON} ${REPO_PATH}/tf_init.py
 
 # set model path
 export MODEL_PATH="${TF_WORKDIR_PATH}/models/${MODEL_NAME}"
@@ -18,7 +18,7 @@ ${PYTHON} object_detection/builders/model_builder_test.py
 # 1 = INFO messages are not printed
 # 2 = INFO and WARNING messages are not printed
 # 3 = INFO, WARNING, and ERROR messages are not printed
-export TF_CPP_MIN_LOG_LEVEL=2
+export TF_CPP_MIN_LOG_LEVEL=1
 
 echo "RUN TF training with the ${MODEL_NAME} model"
 PIPELINE_CONFIG_PATH="${MODEL_PATH}/pipeline.config"
