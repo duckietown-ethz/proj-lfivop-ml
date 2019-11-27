@@ -81,7 +81,7 @@ scp -r YOUR_LOCAL_TF_WORKDIR/ lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/tf_w
 
 Pull docker image:
 ```
-docker pull mstoelzle/dt-object-detection-training:latest-gpu`
+docker pull mstoelzle/dt-object-detection-training:latest-gpu
 ```
 
 Run TensorBoard:
