@@ -1,4 +1,4 @@
-#followed from https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/using_your_own_dataset.md
+# followed from https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/using_your_own_dataset.md
 import tensorflow as tf
 import os
 import csv
@@ -12,21 +12,21 @@ flags.DEFINE_string('output_path', '', 'Path to output TFRecord')
 flags.DEFINE_string('data_folder_path', '', 'Path to data folder having Annotations.csn and images in images folder')
 FLAGS = flags.FLAGS
 
+
 class ImageAnnotationToTFR():
     def __init__(self, writer):
         self.data_folder = FLAGS.data_folder_path
-        self.annotation_csv_path = self.data_folder+'Annotations.csv'
-        self.original_images_folder = self.data_folder+'images/'
+        self.annotation_csv_path = self.data_folder + 'Annotations.csv'
+        self.original_images_folder = self.data_folder + 'images/'
         self.writer = writer
-        self.duckie_classes = {'Duckie':1,
-			'Duckiebot':2,
-			'Traffic light':3,
-			'QR code':4,
-			'Stop sign':5,
-			'Intersection sign':6,
-			'Traffic light':7,
-			'Signal sign':8,}
-        
+        self.duckie_classes = {'Duckie': 1,
+                               'Duckiebot': 2,
+                               'Traffic light': 3,
+                               'QR code': 4,
+                               'Stop sign': 5,
+                               'Intersection sign': 6,
+                               'Signal sign': 7, }
+
     def run(self):
         with open(self.annotation_csv_path) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
@@ -38,7 +38,7 @@ class ImageAnnotationToTFR():
                 else:
                     image_original_filename = row[6]
                     print(f'process image \t{image_original_filename}')
-                    image_path = self.original_images_folder+image_original_filename
+                    image_path = self.original_images_folder + image_original_filename
                     img = cv2.imread(image_path)
                     annotations_json = row[9]
                     annotations = json.loads(annotations_json)
@@ -51,21 +51,21 @@ class ImageAnnotationToTFR():
                     image_format = b'jpg'
                     xmins, xmaxs, ymins, ymaxs, classes_text, classes = self.process_image(img, annotations)
                     tf_example = tf.train.Example(features=tf.train.Features(feature={
-                    	'image/height': dataset_util.int64_feature(height),
-                    	'image/width': dataset_util.int64_feature(width),
-                    	'image/filename': dataset_util.bytes_feature(filename),
-                    	'image/source_id': dataset_util.bytes_feature(filename),
-                    	'image/encoded': dataset_util.bytes_feature(encoded_image_data),
-                    	'image/format': dataset_util.bytes_feature(image_format),
-                    	'image/object/bbox/xmin': dataset_util.float_list_feature(xmins),
-                    	'image/object/bbox/xmax': dataset_util.float_list_feature(xmaxs),
-                    	'image/object/bbox/ymin': dataset_util.float_list_feature(ymins),
-                    	'image/object/bbox/ymax': dataset_util.float_list_feature(ymaxs),
-                    	'image/object/class/text': dataset_util.bytes_list_feature(classes_text),
-                    	'image/object/class/label': dataset_util.int64_list_feature(classes),}))
+                        'image/height': dataset_util.int64_feature(height),
+                        'image/width': dataset_util.int64_feature(width),
+                        'image/filename': dataset_util.bytes_feature(filename),
+                        'image/source_id': dataset_util.bytes_feature(filename),
+                        'image/encoded': dataset_util.bytes_feature(encoded_image_data),
+                        'image/format': dataset_util.bytes_feature(image_format),
+                        'image/object/bbox/xmin': dataset_util.float_list_feature(xmins),
+                        'image/object/bbox/xmax': dataset_util.float_list_feature(xmaxs),
+                        'image/object/bbox/ymin': dataset_util.float_list_feature(ymins),
+                        'image/object/bbox/ymax': dataset_util.float_list_feature(ymaxs),
+                        'image/object/class/text': dataset_util.bytes_list_feature(classes_text),
+                        'image/object/class/label': dataset_util.int64_list_feature(classes), }))
                     print(f'Processed {line_count} lines.')
                     self.writer.write(tf_example.SerializeToString())
-            
+
     def process_image(self, img, annotations):
         h, w, channels = img.shape
         x1, x2, y1, y2, label, label_id = [], [], [], [], [], []
@@ -76,17 +76,18 @@ class ImageAnnotationToTFR():
                 annotation = annotations[i]
                 p1 = annotation['p1']
                 p2 = annotation['p2']
-                x1.append(int(np.floor(w*float(p1['x']))))
-                y1.append(int(np.floor(h*float(p1['y']))))
-                x2.append(int(np.floor(w*float(p2['x']))))
-                y2.append(int(np.floor(h*float(p2['y']))))
+                x1.append(int(np.floor(w * float(p1['x']))))
+                y1.append(int(np.floor(h * float(p1['y']))))
+                x2.append(int(np.floor(w * float(p2['x']))))
+                y2.append(int(np.floor(h * float(p2['y']))))
                 label.append(str(annotation['label']).encode('utf8'))
                 label_id.append(self.duckie_classes[str(annotation['label'])])
-                #print(self.duckie_classes[str(annotation['label'])], str(annotation['label']))
+                # print(self.duckie_classes[str(annotation['label'])], str(annotation['label']))
             except Exception as e:
-                print('New exception: '+str(e))
+                print('New exception: ' + str(e))
         print(f'Processed {i} annotations.')
         return x1, x2, y1, y2, label, label_id
+
 
 def main(_):
     writer = tf.python_io.TFRecordWriter(FLAGS.output_path)
@@ -94,6 +95,7 @@ def main(_):
     # run node
     image_annotation_to_tfr.run()
     writer.close()
+
 
 if __name__ == '__main__':
     tf.app.run()
