@@ -103,6 +103,7 @@ WORKDIR ${REPO_PATH}
 # copy the source code
 COPY . "${REPO_PATH}/"
 
+ENV REPO_SRC_PATH="${REPO_PATH}/src"
 ENV TF_WORKDIR_PATH="/tf_workdir"
 
 # define launch scripts
@@ -117,6 +118,9 @@ ENV TB_PORT 6006
 # CUDA GPU config
 ENV CUDA_DEVICE_ORDER="PCI_BUS_ID"
 ENV CUDA_VISIBLE_DEVICES=1
+
+# Define splitting of dataset between training and evaluation
+ENV EVAL_1_OF_N_IMAGES=6
 
 # define command
 # CMD ["bash", "-c", "source /etc/bash.bashrc &&  && jupyter notebook --notebook-dir=${TF_PATH} --ip 0.0.0.0 --no-browser --allow-root"]

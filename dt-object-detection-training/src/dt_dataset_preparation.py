@@ -7,38 +7,53 @@ from object_detection.utils import dataset_util
 import json
 import numpy as np
 
+data_dir_default = os.path.join(os.environ.get('TF_WORKDIR_PATH'), 'data')
+raw_data_dir_default = os.path.join(os.environ.get('TF_WORKDIR_PATH'), 'raw_data')
+eval_1_of_n_images_default = os.environ.get('EVAL_1_OF_N_IMAGES')
+
 flags = tf.app.flags
-flags.DEFINE_string('output_path', '', 'Path to output TFRecord')
-flags.DEFINE_string('data_folder_path', '', 'Path to data folder having Annotations.csn and images in images folder')
+flags.DEFINE_string('data_dir', data_dir_default, 'Path of directory to output TFRecord')
+flags.DEFINE_string('raw_data_dir', raw_data_dir_default,
+                    'Path to data folder having Annotations.csv and images in images folder')
+flags.DEFINE_string('eval_1_of_n_images', eval_1_of_n_images_default,
+                    'Determines the ratio of images which are either used for evaluation or the training of the model')
 FLAGS = flags.FLAGS
 
 
-class ImageAnnotationToTFR():
-    def __init__(self, writer):
-        self.data_folder = FLAGS.data_folder_path
-        self.annotation_csv_path = self.data_folder + 'Annotations.csv'
-        self.original_images_folder = self.data_folder + 'images/'
-        self.writer = writer
-        self.duckie_classes = {'Duckie': 1,
-                               'Duckiebot': 2,
-                               'Traffic light': 3,
-                               'QR code': 4,
-                               'Stop sign': 5,
-                               'Intersection sign': 6,
-                               'Signal sign': 7, }
+train_record_path = os.path.join(FLAGS.data_dir, 'dt_mscoco_train.record')
+eval_record_path = os.path.join(FLAGS.data_dir, 'dt_mscoco_eval.record')
+
+
+class DtDatasetPreparation:
+    def __init__(self, writer_train, writer_eval):
+        self.raw_data_dir = FLAGS.raw_data_dir
+        self.annotation_csv_path = os.path.join(self.raw_data_dir, 'Annotations.csv')
+        self.raw_images_dir = os.path.join(self.raw_data_dir, 'images')
+        self.writer_train = writer_train
+        self.writer_eval = writer_eval
+        self.dt_object_classes = {'Duckie': 1,
+                                  'Duckiebot': 2,
+                                  'Traffic light': 3,
+                                  'QR code': 4,
+                                  'Stop sign': 5,
+                                  'Intersection sign': 6,
+                                  'Signal sign': 7, }
+        self.eval_1_of_n_images = int(FLAGS.eval_1_of_n_images)
 
     def run(self):
         with open(self.annotation_csv_path) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             line_count = 0
+            i = -1
             for row in csv_reader:
                 if line_count == 0:
                     print(f'Column names are {", ".join(row)}')
                     line_count += 1
                 else:
+                    i = i+1
                     image_original_filename = row[6]
                     print(f'process image \t{image_original_filename}')
-                    image_path = self.original_images_folder + image_original_filename
+                    image_path = os.path.join(self.raw_images_dir, image_original_filename)
                     img = cv2.imread(image_path)
                     annotations_json = row[9]
                     annotations = json.loads(annotations_json)
@@ -64,7 +79,10 @@ class ImageAnnotationToTFR():
                         'image/object/class/text': dataset_util.bytes_list_feature(classes_text),
                         'image/object/class/label': dataset_util.int64_list_feature(classes), }))
                     print(f'Processed {line_count} lines.')
-                    self.writer.write(tf_example.SerializeToString())
+                    if i % self.eval_1_of_n_images == 0:
+                        self.writer_eval.write(tf_example.SerializeToString())
+                    else:
+                        self.writer_train.write(tf_example.SerializeToString())
 
     def process_image(self, img, annotations):
         h, w, channels = img.shape
@@ -81,7 +99,7 @@ class ImageAnnotationToTFR():
                 x2.append(int(np.floor(w * float(p2['x']))))
                 y2.append(int(np.floor(h * float(p2['y']))))
                 label.append(str(annotation['label']).encode('utf8'))
-                label_id.append(self.duckie_classes[str(annotation['label'])])
+                label_id.append(self.dt_object_classes[str(annotation['label'])])
                 # print(self.duckie_classes[str(annotation['label'])], str(annotation['label']))
             except Exception as e:
                 print('New exception: ' + str(e))
@@ -90,12 +108,14 @@ class ImageAnnotationToTFR():
 
 
 def main(_):
-    writer = tf.python_io.TFRecordWriter(FLAGS.output_path)
-    image_annotation_to_tfr = ImageAnnotationToTFR(writer)
+    writer_train = tf.io.TFRecordWriter(train_record_path)
+    writer_eval = tf.io.TFRecordWriter(eval_record_path)
+    image_annotation_to_tfr = DtDatasetPreparation(writer_train, writer_eval)
     # run node
     image_annotation_to_tfr.run()
-    writer.close()
+    writer_train.close()
+    writer_eval.close()
 
 
 if __name__ == '__main__':
-    tf.app.run()
+    tf.compat.v1.app.run()

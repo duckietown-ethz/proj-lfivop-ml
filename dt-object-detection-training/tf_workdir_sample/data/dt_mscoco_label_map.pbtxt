@@ -34,12 +34,7 @@ item {
   display_name: "Intersection sign"
 }
 item {
-  name: "traffic_light"
-  id: 7
-  display_name: "Traffic light"
-}
-item {
   name: "signal_sign"
-  id: 8
+  id: 7
   display_name: "Signal sign"
 }

@@ -1,6 +1,9 @@
 curl
 git
 gnutls-bin
+libsm6
+libxext6
+libxrender-dev
 protobuf-compiler
 python-lxml
 python-pil

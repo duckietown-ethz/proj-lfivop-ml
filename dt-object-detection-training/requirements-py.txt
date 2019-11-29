@@ -4,6 +4,6 @@ jupyter
 jupyter_http_over_ws
 lxml
 matplotlib
+opencv-python
 pillow
 pprint
-
