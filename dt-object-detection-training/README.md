@@ -11,7 +11,8 @@ Structure of TensorFlow Working directory which must be attached as volume to co
     +data
       - dt_mscoco_label_map.pbtxt
       - dt_mscoco_train.record
-      - dt_mscoco_eval.record
+      - dt_mscoco_val.record
+      - dt_mscoco_test.record
     +models
       + model
         - pipeline.conf
@@ -37,14 +38,14 @@ docker build --build-arg GPU=-gpu -f ./Dockerfile -t mstoelzle/dt-object-detecti
 2. Create directory `raw_data` in `tf_workdir`
 3. Copy `Annotations.csv` and `images` folder into `raw_data` directory
 
-Run Preparation:
+Run Dataset preparation:
 ```
-docker run -it -e EVAL_1_OF_N_IMAGES=6 -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest
+docker run -it -e VAL_1_OF_N_IMAGES=10  -e TEST_1_OF_N_IMAGES=10 -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest
 ```
 
-Run Preparation (Maxi):
+Run Dataset preparation (Maxi):
 ```
-docker run -it -e EVAL_1_OF_N_IMAGES=6 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest
+docker run -it -e VAL_1_OF_N_IMAGES=10 -e TEST_1_OF_N_IMAGES=6 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest
 ```
 
 ### Prepare TensorFlow WORKDIR

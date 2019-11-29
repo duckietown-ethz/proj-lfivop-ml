@@ -119,8 +119,9 @@ ENV TB_PORT 6006
 ENV CUDA_DEVICE_ORDER="PCI_BUS_ID"
 ENV CUDA_VISIBLE_DEVICES=1
 
-# Define splitting of dataset between training and evaluation
-ENV EVAL_1_OF_N_IMAGES=6
+# Define splitting of dataset between training, validation and test set
+ENV VAL_1_OF_N_IMAGES=10
+ENV TEST_1_OF_N_IMAGES=10
 
 # define command
 # CMD ["bash", "-c", "source /etc/bash.bashrc &&  && jupyter notebook --notebook-dir=${TF_PATH} --ip 0.0.0.0 --no-browser --allow-root"]
