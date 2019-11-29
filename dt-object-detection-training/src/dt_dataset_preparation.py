@@ -6,6 +6,7 @@ import cv2
 from object_detection.utils import dataset_util
 import json
 import numpy as np
+from pprint import pprint
 
 data_dir_default = os.path.join(os.environ.get('TF_WORKDIR_PATH'), 'data')
 raw_data_dir_default = os.path.join(os.environ.get('TF_WORKDIR_PATH'), 'raw_data')
@@ -48,8 +49,6 @@ class DtDatasetPreparation:
 
         self.val_1_of_n_images = int(FLAGS.val_1_of_n_images)
         self.test_1_of_n_images = int(FLAGS.test_1_of_n_images)
-        print(self.val_1_of_n_images)
-        print(self.test_1_of_n_images)
 
     def run(self):
         with open(self.annotation_csv_path) as csv_file:
@@ -71,11 +70,12 @@ class DtDatasetPreparation:
                     img = cv2.imread(image_path)
                     annotations_json = row[9]
                     annotations = json.loads(annotations_json)
-                    with tf.gfile.GFile(image_path, 'rb') as fid:
+                    with tf.io.gfile.GFile(image_path, 'rb') as fid:
                         encoded_image_data = fid.read()
                     line_count += 1
-                    height = 480
-                    width = 640
+
+                    height, width, channel = img.shape
+
                     filename = image_original_filename.split('.')[0].encode('utf8')
                     image_format = b'jpg'
                     xmins, xmaxs, ymins, ymaxs, classes_text, classes = self.process_image(img, annotations)
@@ -114,7 +114,7 @@ class DtDatasetPreparation:
 
     def process_image(self, img, annotations):
         h, w, channels = img.shape
-        x1, x2, y1, y2, label, label_id = [], [], [], [], [], []
+        x_mins, x_maxs, y_mins, y_maxs, label, label_id = [], [], [], [], [], []
         annotated_img = img
         i = 0
         for i in range(len(annotations)):
@@ -122,17 +122,31 @@ class DtDatasetPreparation:
                 annotation = annotations[i]
                 p1 = annotation['p1']
                 p2 = annotation['p2']
-                x1.append(int(np.floor(w * float(p1['x']))))
-                y1.append(int(np.floor(h * float(p1['y']))))
-                x2.append(int(np.floor(w * float(p2['x']))))
-                y2.append(int(np.floor(h * float(p2['y']))))
-                label.append(str(annotation['label']).encode('utf8'))
-                label_id.append(self.dt_object_classes[str(annotation['label'])])
+                x1 = float(p1['x'])
+                y1 = float(p1['y'])
+                x2 = float(p2['x'])
+                y2 = float(p2['y'])
+
+                x_min = min(x1, x2) # List of normalized left x coordinates in bounding box (1 per box)
+                x_max = max(x1, x2) # List of normalized right x coordinates in bounding box (1 per box)
+                y_min = min(y1, y2) # List of normalized top y coordinates in bounding box (1 per box)
+                y_max = max(y1, y2) # List of normalized bottom y coordinates in bounding box (1 per box)
+
+                # just to make sure
+                if x_min >= 0 and x_max <= 1 and y_min >= 0 and y_max <= 1:
+                    x_mins.append(x_min)
+                    x_maxs.append(x_max)
+                    y_mins.append(y_min)
+                    y_maxs.append(y_max)
+                    label.append(str(annotation['label']).encode('utf8'))
+                    label_id.append(self.dt_object_classes[str(annotation['label'])])
+                else:
+                    raise Exception("x_min, x_max, y_min or y_max are not allowed")
                 # print(self.duckie_classes[str(annotation['label'])], str(annotation['label']))
             except Exception as e:
                 print('New exception: ' + str(e))
         print(f'Processed {i} annotations.')
-        return x1, x2, y1, y2, label, label_id
+        return x_mins, x_maxs, y_mins, y_maxs, label, label_id
 
 
 def main(_):
