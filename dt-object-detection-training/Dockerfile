@@ -107,10 +107,12 @@ ENV REPO_SRC_PATH="${REPO_PATH}/src"
 ENV TF_WORKDIR_PATH="/tf_workdir"
 
 # define launch scripts
-ENV TRAINING_LAUNCHFILE "${REPO_PATH}/launch/training_launch.sh"
+ENV TRAINING_LAUNCHFILE "${REPO_PATH}/launch/training.sh"
 RUN chmod a+rwx ${TRAINING_LAUNCHFILE}
-ENV TENSORBOARD_LAUNCHFILE "${REPO_PATH}/launch/tensorboard_launch.sh"
+ENV TENSORBOARD_LAUNCHFILE "${REPO_PATH}/launch/tensorboard.sh"
 RUN chmod a+rwx ${TENSORBOARD_LAUNCHFILE}
+ENV DATASET_PREPARATION_LAUNCHFILE "${REPO_PATH}/launch/dataset_preparation.sh"
+RUN chmod a+rwx ${DATASET_PREPARATION_LAUNCHFILE}
 
 # port for tensorboard
 ENV TB_PORT 6006

@@ -40,12 +40,12 @@ docker build --build-arg GPU=-gpu -f ./Dockerfile -t mstoelzle/dt-object-detecti
 
 Run Dataset preparation:
 ```
-docker run -it -e VAL_1_OF_N_IMAGES=10  -e TEST_1_OF_N_IMAGES=10 -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest
+docker run -it -e VAL_1_OF_N_IMAGES=10  -e TEST_1_OF_N_IMAGES=10 -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest bash -c launch/dataset_preparation.sh
 ```
 
 Run Dataset preparation (Maxi):
 ```
-docker run -it -e VAL_1_OF_N_IMAGES=10 -e TEST_1_OF_N_IMAGES=6 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest
+docker run -it -e VAL_1_OF_N_IMAGES=10 -e TEST_1_OF_N_IMAGES=6 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest launch/dataset_preparation.sh
 ```
 
 ### Prepare TensorFlow WORKDIR
@@ -56,12 +56,12 @@ docker run -it -e VAL_1_OF_N_IMAGES=10 -e TEST_1_OF_N_IMAGES=6 -v /Users/maximil
 ### Run
 Run TensorBoard:
 ```
-docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard_launch.sh
+docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
 ```
 
 Run TensorBoard (Maxi):
 ```
-docker run -it -p 8888:8888 -p 6006:6006 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard_launch.sh
+docker run -it -p 8888:8888 -p 6006:6006 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
 ```
 
 Access Tensorboard: http://localhost:6006/
@@ -119,7 +119,7 @@ docker pull mstoelzle/dt-object-detection-training:latest-gpu
 
 Run TensorBoard:
 ```
-docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest-gpu bash -c launch/tensorboard_launch.sh
+docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest-gpu bash -c launch/tensorboard.sh
 ```
 
 Access TensorBoard: http://localhost:6067/
