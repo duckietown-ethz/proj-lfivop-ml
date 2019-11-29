@@ -29,7 +29,7 @@ val_record_path = os.path.join(FLAGS.data_dir, 'dt_mscoco_val.record')
 test_record_path = os.path.join(FLAGS.data_dir, 'dt_mscoco_test.record')
 
 
-class DtDatasetPreparation:
+class DTDatasetPreparation:
     def __init__(self, writer_train, writer_val, writer_test):
         self.raw_data_dir = FLAGS.raw_data_dir
         self.annotation_csv_path = os.path.join(self.raw_data_dir, 'Annotations.csv')
@@ -153,7 +153,7 @@ def main(_):
     writer_train = tf.io.TFRecordWriter(train_record_path)
     writer_val = tf.io.TFRecordWriter(val_record_path)
     writer_test = tf.io.TFRecordWriter(test_record_path)
-    image_annotation_to_tfr = DtDatasetPreparation(writer_train, writer_val, writer_test)
+    image_annotation_to_tfr = DTDatasetPreparation(writer_train, writer_val, writer_test)
     # run node
     image_annotation_to_tfr.run()
     writer_train.close()
