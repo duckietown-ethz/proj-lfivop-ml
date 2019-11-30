@@ -39,6 +39,8 @@ class DTDatasetPreparation:
         self.writer_val = writer_val
         self.writer_test = writer_test
 
+        self.label_map_path = os.path.join(FLAGS.data_dir, 'dt_mscoco_label_map.pbtxt')
+
         self.dt_object_classes = {'Duckie': 1,
                                   'Duckiebot': 2,
                                   'Traffic light': 3,
@@ -51,6 +53,27 @@ class DTDatasetPreparation:
         self.test_1_of_n_images = int(FLAGS.test_1_of_n_images)
 
     def run(self):
+        self.write_label_map()
+        self.write_TF_record()
+
+    def write_label_map(self):
+        # write label_map.pbtxt file
+        end = '\n'
+        s = ' '
+        out = ''
+        for name in self.dt_object_classes:
+            ID = self.dt_object_classes[name]
+
+            out += 'item' + s + '{' + end
+            out += s*2 + 'id:' + ' ' + (str(ID)) + end
+            out += s*2 + 'name:' + ' ' + '\"' + name + '\"' + end
+            out += '}' + end*2
+
+        with open(self.label_map_path, 'w') as f:
+            f.write(out)
+
+    def write_TF_record(self):
+        # write TensorFlow .record file
         with open(self.annotation_csv_path) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             line_count = 0
