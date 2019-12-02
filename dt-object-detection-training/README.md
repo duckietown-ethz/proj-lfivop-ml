@@ -1,10 +1,10 @@
 # Duckietown Object Detection ML Training
-## TensorFlow Working directory
-Structure of TensorFlow Working directory which must be attached as volume to container.
+## Working directory
+Structure of working directory which must be attached as volume to container.
 
 `+` describes a directory and `-` a file
 ```
-+tf_workdir
++workdir
     +raw_data
       - Annotations.csv
       + images
@@ -34,51 +34,52 @@ docker build --build-arg GPU=-gpu -f ./Dockerfile -t mstoelzle/dt-object-detecti
 ```
 
 ### Prepare Duckietown Dataset
-1. Create `tf_workdir` directory somewhere on your local drive
-2. Create directory `raw_data` in `tf_workdir`
+1. Create `workdir` directory somewhere on your local drive
+2. Create directory `raw_data` in `workdir`
 3. Copy `Annotations.csv` and `images` folder into `raw_data` directory
 
 Run Dataset preparation:
 ```
-docker run -it -e VAL_1_OF_N_IMAGES=10  -e TEST_1_OF_N_IMAGES=10 -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest bash -c launch/dataset_preparation.sh
+docker run -it -e VAL_1_OF_N_IMAGES=10  -e TEST_1_OF_N_IMAGES=10 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/dataset_preparation.sh
 ```
 
 Run Dataset preparation (Maxi):
 ```
-docker run -it -e VAL_1_OF_N_IMAGES=10 -e TEST_1_OF_N_IMAGES=6 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest launch/dataset_preparation.sh
+docker run -it -e VAL_1_OF_N_IMAGES=10 -e TEST_1_OF_N_IMAGES=6 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/workdir:/workdir mstoelzle/dt-object-detection-training:latest launch/dataset_preparation.sh
 ```
 
 ### Prepare TensorFlow WORKDIR
-1. Create `tf_workdir` directory somewhere on your local drive
-2. Copy contents of `tf_wordir_sample directory` from REPO into local `tf_workdir`
-3. Place `mscoco_train.record` into `tf_workdir/data` directory
+1. Create `workdir` directory somewhere on your local drive
+2. Copy contents of `tf_wordir_sample directory/models` from REPO into local `workdir/models`
+3. If step _Prepare Duckietown Dataset_ was not run: Place `dt_mscoco_train.record` and `dt_mscoco_val` into `workdir/data` directory
+
 
 ### Run
 Run TensorBoard:
 ```
-docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
+docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
 ```
 
 Run TensorBoard (Maxi):
 ```
-docker run -it -p 8888:8888 -p 6006:6006 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
+docker run -it -p 8888:8888 -p 6006:6006 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/workdir:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
 ```
 
 Access Tensorboard: http://localhost:6006/
 
 Run Training:
 ```
-docker run -it -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest
+docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest
 ```
 
 Run Training (Maxi):
 ```
-docker run -it -v /Users/maximilianstoelzle/Documents/ethz/AMoD/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest
+docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v /Users/maximilianstoelzle/Documents/ethz/AMoD/workdir:/workdir mstoelzle/dt-object-detection-training:latest
 ```
 
 ### Run container interactively
 ```
-docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_TF_WORKDIR:/tf_workdir mstoelzle/dt-object-detection-training:latest /bin/bash
+docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest /bin/bash
 ```
 
 ## IDSC RUDOLF
@@ -100,14 +101,14 @@ SSH into IDSC Rudolf:
 ssh lfivop-ml@idsc-rudolf.ethz.ch -L 6067:127.0.0.1:6067
 ```
 
-1. Create `tf_workdir` directory in home directory of RUDOLF account
-2. Copy contents of `tf_wordir_sample directory` from REPO into  `tf_workdir`
-3. Place `mscoco_train.record` into `tf_workdir/data` directory
+1. Create `workdir` directory in home directory of RUDOLF account
+2. Copy contents of `tf_wordir_sample directory` from REPO into  `workdir`
+3. Place `mscoco_train.record` into `workdir/data` directory
 
 Copy from localhost to RUDOLF:
 
 ```
-scp -r YOUR_LOCAL_TF_WORKDIR/ lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/tf_workdir/
+scp -r YOUR_LOCAL_WORKDIR/ lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/workdir/
 ```
 
 ### Run
@@ -119,7 +120,7 @@ docker pull mstoelzle/dt-object-detection-training:latest-gpu
 
 Run TensorBoard:
 ```
-docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest-gpu bash -c launch/tensorboard.sh
+docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu bash -c launch/tensorboard.sh
 ```
 
 Access TensorBoard: http://localhost:6067/
@@ -128,10 +129,10 @@ Run Training:
 
 ```
 ssh lfivop-ml@idsc-rudolf.ethz.ch
-docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CUDA_VISIBLE_DEVICES=2 -v /home/lfivop-ml/tf_workdir:/tf_workdir mstoelzle/dt-object-detection-training:latest-gpu
+docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CUDA_VISIBLE_DEVICES=2 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu
 ```
 
 ### export training checkpoints
 ```
-scp -r lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/tf_workdir/ YOUR_LOCAL_TF_WORKDIR/
+scp -r lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/workdir/ YOUR_LOCAL_WORKDIR/
 ```

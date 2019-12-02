@@ -104,7 +104,7 @@ WORKDIR ${REPO_PATH}
 COPY . "${REPO_PATH}/"
 
 ENV REPO_SRC_PATH="${REPO_PATH}/src"
-ENV TF_WORKDIR_PATH="/tf_workdir"
+ENV WORKDIR_PATH="/workdir"
 
 # define launch scripts
 ENV TRAINING_LAUNCHFILE "${REPO_PATH}/launch/training.sh"

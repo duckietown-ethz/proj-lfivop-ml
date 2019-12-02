@@ -1,7 +1,7 @@
 ${PYTHON} ${REPO_SRC_PATH}/tf_init.py
 
 # set model path
-export MODEL_PATH="${TF_WORKDIR_PATH}/models/${MODEL_NAME}"
+export MODEL_PATH="${WORKDIR_PATH}/models/${MODEL_NAME}"
 echo "SET MODEL_PATH to: ${MODEL_PATH}"
 # create model directories
 mkdir -p "${MODEL_PATH}/eval"
