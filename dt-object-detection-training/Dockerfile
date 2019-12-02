@@ -114,7 +114,8 @@ ENV CONFIG_WORKDIR_PATH="${WORKDIR_PATH}/config" \
 
 
 # define launch scripts
-ENV TRAINING_LAUNCHFILE="${REPO_PATH}/launch/training.sh" \
+ENV INIT_WORKDIR_PATH="${REPO_PATH}/launch/init_workdir.sh" \
+    TRAINING_LAUNCHFILE="${REPO_PATH}/launch/training.sh" \
     TENSORBOARD_LAUNCHFILE="${REPO_PATH}/launch/tensorboard.sh" \
     DATASET_PREPARATION_LAUNCHFILE="${REPO_PATH}/launch/dataset_preparation.sh" \
     LOCATIONAL_WEIGHTS_GEN_LAUNCHFILE="${REPO_PATH}/launch/locational_weights_gen.sh"

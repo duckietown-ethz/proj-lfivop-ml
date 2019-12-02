@@ -43,7 +43,7 @@ class DTLocationalWeightsBase:
         self.config_workdir_path = os.environ['CONFIG_WORKDIR_PATH']
 
         # set path for locational weights json
-        locational_weights_filename = os.environ("LOCATIONAL_WEIGHTS_JSON_FILENAME")
+        locational_weights_filename = os.environ['LOCATIONAL_WEIGHTS_JSON_FILENAME']
         self.locational_weights_path = os.path.join(self.config_workdir_path, locational_weights_filename+'.json')
 
         # set weight parameters

@@ -1,4 +1,4 @@
-./init_workdir.sh
+${INIT_WORKDIR_PATH}
 
 ${PYTHON} ${REPO_LIB_PATH}/tf_init.py
 
