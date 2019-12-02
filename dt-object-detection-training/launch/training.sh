@@ -1,4 +1,9 @@
-${PYTHON} ${REPO_SRC_PATH}/tf_init.py
+./init_workdir.sh
+
+${PYTHON} ${REPO_LIB_PATH}/tf_init.py
+
+# generate locational weights for safety-modified loss function
+${PYTHON} ${REPO_LIB_PATH}/dt_locational_weights/dt_locational_weights_gen.py
 
 # set model path
 export MODEL_PATH="${WORKDIR_PATH}/models/${MODEL_NAME}"

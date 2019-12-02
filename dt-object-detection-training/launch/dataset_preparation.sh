@@ -1,5 +1,5 @@
-${PYTHON} ${REPO_SRC_PATH}/tf_init.py
+./init_workdir.sh
 
-mkdir -p "${WORKDIR_PATH}/data"
+${PYTHON} ${REPO_LIB_PATH}/tf_init.py
 
-${PYTHON} ${REPO_SRC_PATH}/dt_dataset_preparation.py
+${PYTHON} ${REPO_LIB_PATH}/dt_dataset_preparation.py

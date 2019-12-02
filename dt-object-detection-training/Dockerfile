@@ -103,27 +103,39 @@ WORKDIR ${REPO_PATH}
 # copy the source code
 COPY . "${REPO_PATH}/"
 
-ENV REPO_SRC_PATH="${REPO_PATH}/src"
-ENV WORKDIR_PATH="/workdir"
+ENV REPO_LIB_PATH="${REPO_PATH}/lib" \
+    REPO_CONFIG_PATH="${REPO_PATH}/config" \
+    WORKDIR_PATH="/workdir"
+
+ENV CONFIG_WORKDIR_PATH="${WORKDIR_PATH}/config" \
+    DATA_WORKDIR_PATH="${WORKDIR_PATH}/data" \
+    MODELS_WORKDIR_PATH="${WORKDIR_PATH}/models" \
+    RAW_DATA_WORKDIR_PATH="${WORKDIR_PATH}/raw_data"
+
 
 # define launch scripts
-ENV TRAINING_LAUNCHFILE "${REPO_PATH}/launch/training.sh"
-RUN chmod a+rwx ${TRAINING_LAUNCHFILE}
-ENV TENSORBOARD_LAUNCHFILE "${REPO_PATH}/launch/tensorboard.sh"
-RUN chmod a+rwx ${TENSORBOARD_LAUNCHFILE}
-ENV DATASET_PREPARATION_LAUNCHFILE "${REPO_PATH}/launch/dataset_preparation.sh"
-RUN chmod a+rwx ${DATASET_PREPARATION_LAUNCHFILE}
+ENV TRAINING_LAUNCHFILE="${REPO_PATH}/launch/training.sh" \
+    TENSORBOARD_LAUNCHFILE="${REPO_PATH}/launch/tensorboard.sh" \
+    DATASET_PREPARATION_LAUNCHFILE="${REPO_PATH}/launch/dataset_preparation.sh" \
+    LOCATIONAL_WEIGHTS_GEN_LAUNCHFILE="${REPO_PATH}/launch/locational_weights_gen.sh"
+RUN chmod a+rwx ${TRAINING_LAUNCHFILE} ${TENSORBOARD_LAUNCHFILE} ${DATASET_PREPARATION_LAUNCHFILE} ${LOCATIONAL_WEIGHTS_GEN_LAUNCHFILE}
 
 # port for tensorboard
 ENV TB_PORT 6006
 
+# visualize output (for example locational weights)
+ENV VISUALIZE=False
+
 # CUDA GPU config
-ENV CUDA_DEVICE_ORDER="PCI_BUS_ID"
-ENV CUDA_VISIBLE_DEVICES=1
+ENV CUDA_DEVICE_ORDER="PCI_BUS_ID" \
+    CUDA_VISIBLE_DEVICES=1
 
 # Define splitting of dataset between training, validation and test set
-ENV VAL_1_OF_N_IMAGES=10
-ENV TEST_1_OF_N_IMAGES=10
+ENV VAL_1_OF_N_IMAGES=10 \
+    TEST_1_OF_N_IMAGES=10
+
+# hostname of duckiebot which was used to generate camera calibration files for locational weights
+ENV DUCKIEBOT_CALIBRATION_HOSTNAME='default'
 
 # define command
 # CMD ["bash", "-c", "source /etc/bash.bashrc &&  && jupyter notebook --notebook-dir=${TF_PATH} --ip 0.0.0.0 --no-browser --allow-root"]

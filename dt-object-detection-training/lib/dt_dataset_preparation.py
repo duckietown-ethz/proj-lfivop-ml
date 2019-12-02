@@ -8,8 +8,8 @@ import json
 import numpy as np
 from pprint import pprint
 
-data_dir_default = os.path.join(os.environ.get('TF_WORKDIR_PATH'), 'data')
-raw_data_dir_default = os.path.join(os.environ.get('TF_WORKDIR_PATH'), 'raw_data')
+data_dir_default = os.environ.get('DATA_WORKDIR_PATH')
+raw_data_dir_default = os.environ.get('RAW_DATA_WORKDIR_PATH')
 val_1_of_n_images_default = os.environ.get('VAL_1_OF_N_IMAGES')
 test_1_of_n_images_default = os.environ.get('VAL_1_OF_N_IMAGES')
 

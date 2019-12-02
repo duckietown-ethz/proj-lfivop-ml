@@ -45,7 +45,7 @@ docker run -it -e VAL_1_OF_N_IMAGES=10  -e TEST_1_OF_N_IMAGES=10 -v YOUR_LOCAL_W
 
 Run Dataset preparation (Maxi):
 ```
-docker run -it -e VAL_1_OF_N_IMAGES=10 -e TEST_1_OF_N_IMAGES=6 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/workdir:/workdir mstoelzle/dt-object-detection-training:latest launch/dataset_preparation.sh
+docker run -it -e VAL_1_OF_N_IMAGES=10 -e TEST_1_OF_N_IMAGES=10 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/workdir:/workdir mstoelzle/dt-object-detection-training:latest launch/dataset_preparation.sh
 ```
 
 ### Prepare TensorFlow WORKDIR
