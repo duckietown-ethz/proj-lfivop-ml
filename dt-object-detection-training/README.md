@@ -5,6 +5,8 @@ Structure of working directory which must be attached as volume to container.
 `+` describes a directory and `-` a file
 ```
 +workdir
+    + config
+      - dt_locational_weights.json
     +raw_data
       - Annotations.csv
       + images

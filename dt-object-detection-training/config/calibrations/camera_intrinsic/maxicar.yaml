@@ -1,0 +1,23 @@
+camera_matrix:
+  cols: 3
+  data: [307.04789139545585, 0.0, 326.4757296142125, 0.0, 305.4109312298553, 250.73756460026647,
+    0.0, 0.0, 1.0]
+  rows: 3
+camera_name: maxicar/camera_node
+distortion_coefficients:
+  cols: 5
+  data: [-0.25274631620085836, 0.0399191029978057, -0.0005575244423569788, 0.0028476596690322617,
+    0.0]
+  rows: 1
+distortion_model: plumb_bob
+image_height: 480
+image_width: 640
+projection_matrix:
+  cols: 4
+  data: [211.17022705078125, 0.0, 324.2571553602538, 0.0, 0.0, 240.4145050048828,
+    257.75926322936357, 0.0, 0.0, 0.0, 1.0, 0.0]
+  rows: 3
+rectification_matrix:
+  cols: 3
+  data: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
+  rows: 3
