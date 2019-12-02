@@ -135,7 +135,8 @@ ENV VAL_1_OF_N_IMAGES=10 \
     TEST_1_OF_N_IMAGES=10
 
 # hostname of duckiebot which was used to generate camera calibration files for locational weights
-ENV DUCKIEBOT_CALIBRATION_HOSTNAME='default'
+ENV DUCKIEBOT_CALIBRATION_HOSTNAME='default' \
+    LOCATIONAL_WEIGHTS_JSON_FILENAME='dt_locational_weights'
 
 # define command
 # CMD ["bash", "-c", "source /etc/bash.bashrc &&  && jupyter notebook --notebook-dir=${TF_PATH} --ip 0.0.0.0 --no-browser --allow-root"]

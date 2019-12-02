@@ -53,6 +53,12 @@ docker run -it -e VAL_1_OF_N_IMAGES=10 -e TEST_1_OF_N_IMAGES=10 -v /Users/maximi
 2. Copy contents of `tf_wordir_sample directory/models` from REPO into local `workdir/models`
 3. If step _Prepare Duckietown Dataset_ was not run: Place `dt_mscoco_train.record` and `dt_mscoco_val` into `workdir/data` directory
 
+### Run locational weights generator
+Generate locational weights matrix for use in safety-modified loss-function.
+This step is automatically done, when running the training. However, it can also be run separately:
+```
+docker run -it -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -e VISUALIZE=True -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/locational_weights_gen.sh
+```
 
 ### Run
 Run TensorBoard:
