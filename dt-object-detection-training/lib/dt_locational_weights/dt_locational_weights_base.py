@@ -12,8 +12,11 @@ from pprint import pprint
 class DTLocationalWeightsBase:
 
     def __init__(self):
-        # WORKDIR_PATH
+        #  # initialize workdir paths
         self.workdir_path = os.environ['WORKDIR_PATH']
+        self.config_workdir_path = os.environ['CONFIG_WORKDIR_PATH']
+        self.data_workdir_path = os.environ['DATA_WORKDIR_PATH']
+        self.raw_data_workdir_path = os.environ['RAW_DATA_WORKDIR_PATH']
 
         self.calibrations_path = os.path.join(os.environ['REPO_CONFIG_PATH'], 'calibrations')
 
@@ -39,8 +42,6 @@ class DTLocationalWeightsBase:
 
         # find horizon
         self.horizon = self.find_horizon()
-
-        self.config_workdir_path = os.environ['CONFIG_WORKDIR_PATH']
 
         # set path for locational weights json
         locational_weights_filename = os.environ['LOCATIONAL_WEIGHTS_JSON_FILENAME']

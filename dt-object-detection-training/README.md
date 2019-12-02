@@ -59,7 +59,12 @@ docker run -it -e VAL_1_OF_N_IMAGES=10 -e TEST_1_OF_N_IMAGES=10 -v /Users/maximi
 Generate locational weights matrix for use in safety-modified loss-function.
 This step is automatically done, when running the training. However, it can also be run separately:
 ```
-docker run -it -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -e VISUALIZE=True -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/locational_weights_gen.sh
+docker run -it -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/locational_weights_gen.sh
+```
+
+### Run locational weights visualizer
+```
+docker run -it -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c "launch/locational_weights_viz.sh --image_filename b_BR_doort_frame00328"
 ```
 
 ### Run
@@ -102,12 +107,25 @@ Push to Docker Hub:
 docker push mstoelzle/dt-object-detection-training:latest-gpu
 ```
 
-### Prepare TensorFlow WORKDIR
-
+### SSH in to IDSC Rudolf:
 SSH into IDSC Rudolf:
 ```
 ssh lfivop-ml@idsc-rudolf.ethz.ch -L 6067:127.0.0.1:6067
 ```
+Screen can be used to manage multiple terminal sessions and detach them in order that the training keeps running:
+https://kb.iu.edu/d/acuy
+```
+# start window
+screen
+# detach window (within window)
+Ctrl-a d
+# resume window
+screen -r
+# exit window (within window)
+exit
+```
+
+### Prepare TensorFlow WORKDIR
 
 1. Create `workdir` directory in home directory of RUDOLF account
 2. Copy contents of `tf_wordir_sample directory` from REPO into  `workdir`
@@ -136,7 +154,6 @@ Access TensorBoard: http://localhost:6067/
 Run Training:
 
 ```
-ssh lfivop-ml@idsc-rudolf.ethz.ch
 docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CUDA_VISIBLE_DEVICES=2 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu
 ```
 
