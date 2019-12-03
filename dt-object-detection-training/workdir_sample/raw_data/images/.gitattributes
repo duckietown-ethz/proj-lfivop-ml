@@ -1,3 +1,4 @@
+*.jpg filter=lfs diff=lfs merge=lfs -text
 B_CR_Duckbar_frame01015.jpg filter=lfs diff=lfs merge=lfs -text
 B_CR_Duckbar_frame00464.jpg filter=lfs diff=lfs merge=lfs -text
 d_cr_zgxbot_00003.jpg filter=lfs diff=lfs merge=lfs -text

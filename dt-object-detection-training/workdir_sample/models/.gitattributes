@@ -1,2 +1,6 @@
 *.data-00000-of-00001 filter=lfs diff=lfs merge=lfs -text
 *.meta filter=lfs diff=lfs merge=lfs -text
+ssd_mobilenet_v2_quantized_300x300_coco/model.ckpt.meta filter=lfs diff=lfs merge=lfs -text
+ssdlite_mobilenet_v2_coco/model.ckpt.meta filter=lfs diff=lfs merge=lfs -text
+ssd_mobilenet_v2_quantized_300x300_coco/model.ckpt.data-00000-of-00001 filter=lfs diff=lfs merge=lfs -text
+ssdlite_mobilenet_v2_coco/model.ckpt.data-00000-of-00001 filter=lfs diff=lfs merge=lfs -text
