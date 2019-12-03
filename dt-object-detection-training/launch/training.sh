@@ -20,7 +20,6 @@ ${PYTHON} object_detection/builders/model_builder_test.py
 
 echo "RUN TF training with the ${MODEL_NAME} model"
 PIPELINE_CONFIG_PATH="${MODEL_PATH}/pipeline.config"
-NUM_TRAIN_STEPS=50000
 SAMPLE_1_OF_N_EVAL_EXAMPLES=1
 python object_detection/model_main.py \
     --pipeline_config_path="${PIPELINE_CONFIG_PATH}" \

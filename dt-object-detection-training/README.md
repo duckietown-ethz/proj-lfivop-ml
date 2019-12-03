@@ -70,12 +70,12 @@ docker run -it -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/
 ### Run
 Run TensorBoard:
 ```
-docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
+docker run -it -p 6006:6006 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
 ```
 
 Run TensorBoard (Maxi):
 ```
-docker run -it -p 8888:8888 -p 6006:6006 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/dt-object-detection-training-workdir:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
+docker run -it -p 6006:6006 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/dt-object-detection-training-workdir:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
 ```
 
 Access Tensorboard: http://localhost:6006/
@@ -154,7 +154,7 @@ Access TensorBoard: http://localhost:6067/
 Run Training:
 
 ```
-docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CUDA_VISIBLE_DEVICES=2 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu
+docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CUDA_VISIBLE_DEVICES=2 -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu
 ```
 
 ### export training checkpoints

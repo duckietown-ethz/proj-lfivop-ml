@@ -82,7 +82,6 @@ RUN ${PYTHON} setup.py install
 RUN apt-get autoremove -y
 
 WORKDIR ${TF_PATH}
-EXPOSE 8888
 
 RUN ${PYTHON} -m ipykernel.kernelspec
 
@@ -136,6 +135,12 @@ ENV VAL_1_OF_N_IMAGES=10 \
 # hostname of duckiebot which was used to generate camera calibration files for locational weights
 ENV DUCKIEBOT_CALIBRATION_HOSTNAME='default' \
     LOCATIONAL_WEIGHTS_JSON_FILENAME='dt_locational_weights'
+
+# training settings
+ENV NUM_TRAIN_STEPS=50000
+
+# needed if jupyter is used
+# EXPOSE 8888
 
 # define command
 # CMD ["bash", "-c", "source /etc/bash.bashrc &&  && jupyter notebook --notebook-dir=${TF_PATH} --ip 0.0.0.0 --no-browser --allow-root"]
