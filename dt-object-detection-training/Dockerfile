@@ -113,7 +113,7 @@ ENV CONFIG_WORKDIR_PATH="${WORKDIR_PATH}/config" \
 
 
 # define launch scripts
-ENV INIT_WORKDIR_PATH="${REPO_PATH}/launch/init_workdir.sh" \
+ENV WORKDIR_INIT_PATH="${REPO_PATH}/launch/workdir_init.sh" \
     TRAINING_LAUNCHFILE="${REPO_PATH}/launch/training.sh" \
     TENSORBOARD_LAUNCHFILE="${REPO_PATH}/launch/tensorboard.sh" \
     DATASET_PREPARATION_LAUNCHFILE="${REPO_PATH}/launch/dataset_preparation.sh" \
