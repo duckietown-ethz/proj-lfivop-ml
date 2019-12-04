@@ -16,22 +16,26 @@ for row in open("/code/catkin_ws/src/coral/packages/object_detection/src/duckie_
 	colors[int(classID)] = color.strip()
 
 # load the Google Coral object detection model
-print("[INFO] loading Coral model...")
+print("[INFO] loading Edge TPU model...")
 model = DetectionEngine("/code/catkin_ws/src/coral/packages/object_detection/src/dt_inference_models/ssdv2_standardweight_edgetpu.tflite")
 FPS = []
 AvgFPS = 0
 while True:
 	try:
 		start_time = time.time()
+		
+		# Read numpy array of image stream
 		frame = np.load('/code/catkin_ws/src/coral/packages/object_detection/src/temp_frame.npy')
-
 		frame = Image.fromarray(frame)
-		results = model.detect_with_image(frame, threshold=0.3, top_k=20, keep_aspect_ratio=True, relative_coord=False)
 
+		# Execute inference
+		results = model.detect_with_image(frame, threshold=0.3, top_k=20, keep_aspect_ratio=True, relative_coord=False)
+		
+		# Initialize empty dictionary and list
 		d = {}
 		l = []
 		
-
+		# Get inference results
 		for r in results:
 			box = r.bounding_box.flatten().astype("int")
 			(startX, startY, endX, endY) = box
@@ -46,8 +50,8 @@ while True:
 			d['score'] = float(r.score)
 			d['FPS'] = int(AvgFPS)
 			l.append(d.copy())
-			#print(l)
 
+		# Dump inference results to prediction.json
 		with open('/code/catkin_ws/src/coral/packages/object_detection/src/prediction', 'w') as fout:
 			json.dump(l, fout)
 
