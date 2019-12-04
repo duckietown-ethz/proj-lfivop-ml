@@ -4,6 +4,7 @@ jupyter
 jupyter_http_over_ws
 lxml
 matplotlib
+opencv-python
 pillow
-tensorflow==2.0.0
-
+pprint
+pyyaml

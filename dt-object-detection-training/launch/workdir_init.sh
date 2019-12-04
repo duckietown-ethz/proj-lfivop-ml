@@ -1,0 +1,7 @@
+mkdir -p "${CONFIG_WORKDIR_PATH}"
+mkdir -p "${DATA_WORKDIR_PATH}"
+mkdir -p "${DATA_WORKDIR_PATH}/images"
+mkdir -p "${EXPORT_WORKDIR_PATH}"
+mkdir -p "${MODELS_WORKDIR_PATH}"
+mkdir -p "${RAW_DATA_WORKDIR_PATH}"
+mkdir -p "${RAW_DATA_WORKDIR_PATH}/images"

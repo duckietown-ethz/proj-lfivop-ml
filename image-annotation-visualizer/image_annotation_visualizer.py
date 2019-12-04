@@ -6,7 +6,7 @@ import numpy as np
 
 from pprint import pprint
 
-class ImageAnnotationVisualizer():
+class ImageAnnotationVisualizer:
 
     def __init__(self):
         self.path = os.path.dirname(os.path.realpath(__file__))
