@@ -114,14 +114,20 @@ ENV CONFIG_WORKDIR_PATH="${WORKDIR_PATH}/config" \
 
 
 # define launch scripts
-ENV WORKDIR_INIT_PATH="${REPO_PATH}/launch/workdir_init.sh" \
+ENV WORKDIR_INIT="${REPO_PATH}/launch/workdir_init.sh" \
     TRAINING_LAUNCHFILE="${REPO_PATH}/launch/training.sh" \
     INFERENCE_GRAPH_EXPORT_LAUNCHFILE="${REPO_PATH}/launch/inference_graph_export.sh" \
     TENSORBOARD_LAUNCHFILE="${REPO_PATH}/launch/tensorboard.sh" \
     DATASET_PREPARATION_LAUNCHFILE="${REPO_PATH}/launch/dataset_preparation.sh" \
     LOCATIONAL_WEIGHTS_GEN_LAUNCHFILE="${REPO_PATH}/launch/locational_weights_gen.sh" \
     LOCATIONAL_WEIGHTS_VIZ_LAUNCHFILE="${REPO_PATH}/launch/locational_weights_viz.sh"
-RUN chmod a+rwx ${WORKDIR_INIT_PATH} ${TRAINING_LAUNCHFILE} ${INFERENCE_GRAPH_EXPORT_LAUNCHFILE} ${TENSORBOARD_LAUNCHFILE} ${DATASET_PREPARATION_LAUNCHFILE} ${LOCATIONAL_WEIGHTS_GEN_LAUNCHFILE} ${LOCATIONAL_WEIGHTS_VIZ_LAUNCHFILE}
+RUN chmod a+rwx ${WORKDIR_INIT} \
+                ${TRAINING_LAUNCHFILE} \
+                ${INFERENCE_GRAPH_EXPORT_LAUNCHFILE} \
+                ${TENSORBOARD_LAUNCHFILE} \
+                ${DATASET_PREPARATION_LAUNCHFILE} \
+                ${LOCATIONAL_WEIGHTS_GEN_LAUNCHFILE} \
+                ${LOCATIONAL_WEIGHTS_VIZ_LAUNCHFILE}
 
 # port for tensorboard
 ENV TB_PORT 6006

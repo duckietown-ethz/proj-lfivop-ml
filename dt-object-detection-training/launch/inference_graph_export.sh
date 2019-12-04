@@ -1,4 +1,4 @@
-${WORKDIR_INIT_PATH}
+${WORKDIR_INIT}
 
 ${PYTHON} ${REPO_LIB_PATH}/tf_init.py
 
@@ -18,6 +18,7 @@ INPUT_TYPE=image_tensor
 PIPELINE_CONFIG_PATH="${MODEL_PATH}/pipeline.config"
 EXPORT_DIR="${EXPORT_WORKDIR_PATH}/${MODEL_NAME}_ckpt-${CHECKPOINT_NUMBER}_${date}"
 TRAINED_CKPT_PREFIX="${MODEL_PATH}/model.ckpt-${CHECKPOINT_NUMBER}"
+
 ${PYTHON} object_detection/export_inference_graph.py \
     --input_type=${INPUT_TYPE} \
     --pipeline_config_path=${PIPELINE_CONFIG_PATH} \
