@@ -8,10 +8,7 @@ from duckietown import DTROS
 from sensor_msgs.msg import CompressedImage
 from cv_bridge import CvBridge
 import json
-<<<<<<< HEAD
 import time
-=======
->>>>>>> 3628fb50bb9830824ae2a2be1137e6510f2a3ade
 
 class Detector(DTROS):
 
@@ -22,11 +19,7 @@ class Detector(DTROS):
 
 		#Get vehicle name
 		self.veh_name = str(os.environ['VEHICLE_NAME'])
-<<<<<<< HEAD
 		self.fps = str(0)
-=======
-
->>>>>>> 3628fb50bb9830824ae2a2be1137e6510f2a3ade
 		#Load camera resolution
 		try:
 			self.res_w = int(os.environ['resolution_w'])
@@ -45,12 +38,9 @@ class Detector(DTROS):
 		self.sub_image = rospy.Subscriber("/{}/camera_node/image/compressed".format(self.veh_name), CompressedImage, self.callback, queue_size=1)
 
 	def callback(self, data):
-<<<<<<< HEAD
 		#start_time = time.time()
 		#x = 1 # displays the frame rate every 1 second
 
-=======
->>>>>>> 3628fb50bb9830824ae2a2be1137e6510f2a3ade
 		#Convert compressed image to BGR
 		np_arr = np.fromstring(data.data, np.uint8)
 		orig = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
@@ -61,7 +51,6 @@ class Detector(DTROS):
 		try:
 			with open('/code/catkin_ws/src/coral/packages/object_detection/src/prediction') as json_file:
 				prediction = json.load(json_file)
-<<<<<<< HEAD
 			
 			for p in prediction:
 				# Read FPS				
@@ -99,25 +88,6 @@ class Detector(DTROS):
 		
 		# Publish image		
 		compressed_img = br.cv2_to_compressed_imgmsg(orig, dst_format='jpg')
-=======
-
-			for p in prediction:
-				startX, startY, endX, endY = p['startX'], p['startY'], p['endX'], p['endY']
-				label = p['label']
-				score = p['score']
-
-				# draw the bounding box and label on the image
-				cv2.rectangle(orig, (startX, startY), (endX, endY), (0, 255, 0), 2)
-				y = startY - 15 if startY - 15 > 15 else startY + 15
-				text = "{}: {:.2f}%".format(label, score * 100)
-				cv2.putText(orig, text, (startX, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-		except:
-			pass
-
-		compressed_img = br.cv2_to_compressed_imgmsg(orig, dst_format='jpg')
-
->>>>>>> 3628fb50bb9830824ae2a2be1137e6510f2a3ade
 		self.pub.publish(compressed_img)
 
 if __name__ == '__main__':
@@ -125,8 +95,4 @@ if __name__ == '__main__':
 	br = CvBridge()
 	Detector_node = Detector(node_name='detector')
 	# Keep it spinning to keep the node alive
-<<<<<<< HEAD
 	rospy.spin()
-=======
-	rospy.spin()
->>>>>>> 3628fb50bb9830824ae2a2be1137e6510f2a3ade
