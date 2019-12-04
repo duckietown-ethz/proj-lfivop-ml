@@ -82,12 +82,17 @@ Access Tensorboard: http://localhost:6006/
 
 Run Training:
 ```
-docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest
+docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest
 ```
 
 Run Training (Maxi):
 ```
-docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v /Users/maximilianstoelzle/Documents/ethz/AMoD/workdir:/workdir mstoelzle/dt-object-detection-training:latest
+docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v /Users/maximilianstoelzle/Documents/ethz/AMoD/workdir:/workdir mstoelzle/dt-object-detection-training:latest
+```
+
+### Run export of inference graph
+```
+docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CHECKPOINT_NUMBER=0 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/inference_graph_export.sh
 ```
 
 ### Run container interactively
