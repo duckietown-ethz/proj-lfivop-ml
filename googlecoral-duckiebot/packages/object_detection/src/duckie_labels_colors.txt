@@ -1,0 +1,7 @@
+0  Duckie;(0,255,255)
+1  Duckiebot;(0,255,0)
+2  Traffic light;(0,0,255)
+3  QR code;(255,255,0)
+4  Stop sign;(0,50,255)
+5  Intersection sign;(255,255,255)
+6  Signal sign;(255,20,255)
