@@ -40,6 +40,11 @@ WORKDIR "${REPO_PATH}"
 COPY ./requirements-apt.txt "${REPO_PATH}/"
 COPY ./requirements-py.txt "${REPO_PATH}/"
 
+# add sources for google coral edge-tpu
+RUN APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
+    echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | tee /etc/apt/sources.list.d/coral-edgetpu.list
+
 # install apt dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     $(awk -F: '/^[^#]/ { print $1 }' "${REPO_PATH}/"requirements-apt.txt | uniq) \
@@ -117,6 +122,7 @@ ENV CONFIG_WORKDIR_PATH="${WORKDIR_PATH}/config" \
 ENV WORKDIR_INIT="${REPO_PATH}/launch/workdir_init.sh" \
     TRAINING_LAUNCHFILE="${REPO_PATH}/launch/training.sh" \
     INFERENCE_GRAPH_EXPORT_LAUNCHFILE="${REPO_PATH}/launch/inference_graph_export.sh" \
+    INFERENCE_GRAPH_EDGETPU_EXPORT_LAUNCHFILE="${REPO_PATH}/launch/inference_graph_edgetpu_export.sh" \
     TENSORBOARD_LAUNCHFILE="${REPO_PATH}/launch/tensorboard.sh" \
     DATASET_PREPARATION_LAUNCHFILE="${REPO_PATH}/launch/dataset_preparation.sh" \
     LOCATIONAL_WEIGHTS_GEN_LAUNCHFILE="${REPO_PATH}/launch/locational_weights_gen.sh" \
@@ -124,6 +130,7 @@ ENV WORKDIR_INIT="${REPO_PATH}/launch/workdir_init.sh" \
 RUN chmod a+rwx ${WORKDIR_INIT} \
                 ${TRAINING_LAUNCHFILE} \
                 ${INFERENCE_GRAPH_EXPORT_LAUNCHFILE} \
+                ${INFERENCE_GRAPH_EDGETPU_EXPORT_LAUNCHFILE} \
                 ${TENSORBOARD_LAUNCHFILE} \
                 ${DATASET_PREPARATION_LAUNCHFILE} \
                 ${LOCATIONAL_WEIGHTS_GEN_LAUNCHFILE} \

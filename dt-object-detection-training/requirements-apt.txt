@@ -1,4 +1,5 @@
 curl
+edgetpu
 git
 gnutls-bin
 libsm6

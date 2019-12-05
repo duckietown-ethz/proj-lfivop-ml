@@ -3,7 +3,7 @@ ${WORKDIR_INIT}
 ${PYTHON} ${REPO_LIB_PATH}/tf_init.py
 
 # put current date as yyyy-mm-dd HH:MM:SS in $date
-printf -v date '%(%Y%m%d%H%M%S)T\n' -1
+printf -v date '%(%Y%m%d%H%M%S)T' -1
 
 # set model path
 export MODEL_PATH="${MODELS_WORKDIR_PATH}/${MODEL_NAME}"

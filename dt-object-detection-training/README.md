@@ -95,6 +95,11 @@ docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e NUM_TRAI
 docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CHECKPOINT_NUMBER=0 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/inference_graph_export.sh
 ```
 
+### Run export of Edge-TPU inference graph
+```
+docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CHECKPOINT_NUMBER=0 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/inference_graph_edgetpu_export.sh
+```
+
 ### Run container interactively
 ```
 docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest /bin/bash
