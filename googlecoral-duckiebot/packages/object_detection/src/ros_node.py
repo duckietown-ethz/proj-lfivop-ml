@@ -87,7 +87,7 @@ class Detector(DTROS):
         self.a_brake_max = 0.2 * 9.81  # m/s^2 --> 0.2*g
         self.v_max = 1  # m/s
         self.d_brake = 1 / 2 * self.v_max ** 2 / self.a_brake_max
-        print("Calculated a braking distance of d_brake: " + str(self.d_brake) + "m")
+        rospy.loginfo("Calculated a braking distance of d_brake: " + str(self.d_brake) + "m")
 
         # Bottom center point
         BC_pixel = Pixel()
@@ -95,7 +95,7 @@ class Detector(DTROS):
         BC_pixel.v = self.camera_info['height']
         BC_ground = self.pixel2ground(BC_pixel)
         origin_r = BC_ground['x']
-        print('setted mu of weight r to: ' + str(origin_r) + 'm')
+        rospy.loginfo('setted mu of weight r to: ' + str(origin_r) + 'm')
 
         self.threshold_emergency_stop_r = origin_r + 1.5 * self.d_brake
         self.threshold_emergency_stop_phi = 60 / 180 * math.pi  # [rad]
