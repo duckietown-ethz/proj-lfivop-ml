@@ -73,6 +73,10 @@ RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
 # define launch script
 ENV LAUNCHFILE "${REPO_PATH}/launch.sh"
 
+# Object Detection Safety Emergency Stop
+# emergency stop is activated, if duckie or duckiebot are right in front of Duckiebot
+ENV OBJDET_EMERGENCY_STOP=true
+
 # define command
 CMD ["bash", "-c", "${LAUNCHFILE}"]
 # <== Do not change this code
