@@ -2,8 +2,24 @@
 AMoD 2019 - Robust object detection 
 
 ## Introduction
+- mission
+- scope
+- assumptions
+- video
 
-### Video
+## System Architecture
+
+### Safety-modified loss function
+- What did whe change
+- Locational weights
+- Class weights
+
+### Data augmentation
+
+### Edge-TPU
+- Which Edge-TPU do we use
+- What are needed steps to convert models
+- Architecture of inference ROS node
 
 ## Training
 How to run the Training
@@ -23,3 +39,6 @@ Analysis of effect of safety-modified loss function
 Flops running on Edge-TPU
 
 ## Future work
+
+## Literature
+Sources
