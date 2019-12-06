@@ -1,0 +1,6 @@
+[submodule "dt-object-detection-training/tf/models"]
+	path = dt-object-detection-training/tf/models
+	url = https://github.com/mstoelzle/tensorflow-models
+[submodule "dt-object-detection-training/tf/cocoapi"]
+	path = dt-object-detection-training/tf/cocoapi
+	url = https://github.com/cocodataset/cocoapi.git

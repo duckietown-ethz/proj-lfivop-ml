@@ -57,19 +57,23 @@ RUN jupyter serverextension enable --py jupyter_http_over_ws
 
 # configure tensorflow
 ENV TF_PATH="${REPO_PATH}/tf"
-ENV TF_MODELS_RESEARCH_PATH="${TF_PATH}/models/research"
-WORKDIR ${TF_PATH}
 
 # Install tensorflow models object detection
+COPY "tf/models"  "${TF_PATH}/models"
 # RUN git clone https://github.com/tensorflow/models ${TF_PATH}/models
 # we want to debug and change some stuff
-RUN git clone https://github.com/mstoelzle/tensorflow-models ${TF_PATH}/models
+# RUN git clone https://github.com/mstoelzle/tensorflow-models ${TF_PATH}/models
 # WORKDIR ${TF_PATH}/models
 # RUN git checkout "tags/v1.13.0"
 
+ENV TF_MODELS_RESEARCH_PATH="${TF_PATH}/models/research"
+
 # install COCO API
-RUN git clone https://github.com/cocodataset/cocoapi.git /tmp/cocoapi
-WORKDIR /tmp/cocoapi/PythonAPI
+WORKDIR ${TF_PATH}
+COPY "tf/cocoapi"  "${TF_PATH}/cocoapi"
+# RUN git clone https://github.com/cocodataset/cocoapi.git "${TF_PATH}/cocoapi"
+
+WORKDIR "${TF_PATH}/cocoapi/PythonAPI"
 RUN make
 RUN make install
 RUN ${PYTHON} setup.py install
@@ -104,8 +108,12 @@ RUN ${PYTHON} -m ipykernel.kernelspec
 
 
 WORKDIR ${REPO_PATH}
+
 # copy the source code
-COPY . "${REPO_PATH}/"
+# COPY . "${REPO_PATH}/"
+COPY "config/"  "${REPO_PATH}/config/"
+COPY "launch/"  "${REPO_PATH}/launch/"
+COPY "lib/"  "${REPO_PATH}/lib/"
 
 ENV REPO_LIB_PATH="${REPO_PATH}/lib" \
     REPO_CONFIG_PATH="${REPO_PATH}/config" \
