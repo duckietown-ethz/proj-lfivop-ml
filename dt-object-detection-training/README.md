@@ -25,6 +25,17 @@ Structure of working directory which must be attached as volume to container.
 We use Docker to run our scripts. Please execute these command in this directory.
 
 **Important:** Don't forget to increase the allocated memory and swap-storage of docker, otherwise TensorFlow will get killed
+
+## Git submodule initialization
+We use git submodules for the tensorflow/models and cocoapi repository. 
+After cloning this repository, you need to initialize the git submodules first:
+```
+# initialize submodules
+git submodule init && git submodule update
+# fetch remote HEAD for submodules
+git submodule update --remote
+```
+
 ### Build
 Build CPU version:
 ```
@@ -59,45 +70,45 @@ docker run -it -e VAL_1_OF_N_IMAGES=10 -e TEST_1_OF_N_IMAGES=10 -v /Users/maximi
 Generate locational weights matrix for use in safety-modified loss-function.
 This step is automatically done, when running the training. However, it can also be run separately:
 ```
-docker run -it -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/locational_weights_gen.sh
+docker run -u $(id -u):$(id -g) -it -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/locational_weights_gen.sh
 ```
 
 ### Run locational weights visualizer
 ```
-docker run -it -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c "launch/locational_weights_viz.sh --image_filename b_BR_doort_frame00328"
+docker run -u $(id -u):$(id -g) -it -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c "launch/locational_weights_viz.sh --image_filename b_BR_doort_frame00328"
 ```
 
 ### Run
 Run TensorBoard:
 ```
-docker run -it -p 6006:6006 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
+docker run -u $(id -u):$(id -g) -it -p 6006:6006 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
 ```
 
 Run TensorBoard (Maxi):
 ```
-docker run -it -p 6006:6006 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/dt-object-detection-training-workdir:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
+docker run -u $(id -u):$(id -g) -it -p 6006:6006 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/dt-object-detection-training-workdir:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
 ```
 
 Access Tensorboard: http://localhost:6006/
 
 Run Training:
 ```
-docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest
+docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest
 ```
 
 Run Training (Maxi):
 ```
-docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v /Users/maximilianstoelzle/Documents/ethz/AMoD/workdir:/workdir mstoelzle/dt-object-detection-training:latest
+docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v /Users/maximilianstoelzle/Documents/ethz/AMoD/dt-object-detection-training-workdir:/workdir mstoelzle/dt-object-detection-training:latest
 ```
 
 ### Run export of inference graph
 ```
-docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CHECKPOINT_NUMBER=0 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/inference_graph_export.sh
+docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CHECKPOINT_NUMBER=0 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/inference_graph_export.sh
 ```
 
 ### Run export of Edge-TPU inference graph
 ```
-docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CHECKPOINT_NUMBER=0 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/inference_graph_edgetpu_export.sh
+docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CHECKPOINT_NUMBER=0 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/inference_graph_edgetpu_export.sh
 ```
 
 ### Run container interactively
