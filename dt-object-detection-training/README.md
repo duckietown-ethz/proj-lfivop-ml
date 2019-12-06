@@ -26,12 +26,13 @@ We use Docker to run our scripts. Please execute these command in this directory
 
 **Important:** Don't forget to increase the allocated memory and swap-storage of docker, otherwise TensorFlow will get killed
 
-## Git submodule initialization
+### Git submodule initialization
 We use git submodules for the tensorflow/models and cocoapi repository. 
 After cloning this repository, you need to initialize the git submodules first:
 ```
 # initialize submodules
 git submodule init && git submodule update
+
 # fetch remote HEAD for submodules
 git submodule update --remote
 ```
