@@ -156,7 +156,7 @@ docker pull mstoelzle/dt-object-detection-training:latest-gpu
 
 Run TensorBoard:
 ```
-docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu bash -c launch/tensorboard.sh
+docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu bash -c launch/tensorboard.sh
 ```
 
 Access TensorBoard: http://localhost:6067/
@@ -164,7 +164,7 @@ Access TensorBoard: http://localhost:6067/
 Run Training:
 
 ```
-docker run -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CUDA_VISIBLE_DEVICES=2 -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu
+docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CUDA_VISIBLE_DEVICES=2 -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu
 ```
 
 ### export training checkpoints
