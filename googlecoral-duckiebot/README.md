@@ -33,14 +33,18 @@ If no model is specified, it will be set to "class_localization". Model name cho
 | augmentation  | extra  | standard | standard |
 | vanilla  | standard  | standard | standard |
 
-The image stream resolution is set to default at 320x240 px. You can change the resolution by adding environment variable 'resolution_w' on the Docker run command. For example, run the command below to set the resolution at 640x480px.
+Other environment variables you can set:
 
-```bash
-docker -H [ROBOT_NAME].local run -it --rm --net=host -e resolution_w=640 -v /dev/bus/usb:/dev/bus/usb --privileged duckietown/googlecoral-duckiebot:v1-arm32v7
+| environment varibale  | description | default | 
+| ------------- | ------------- |  ------------- | 
+| resolution_w | Width of image stream resolution. Height is set to 3/4 of width. For example, add "-e resolution_w=640"  to the docker run command above to set the resolution to 640x480px. | 320 |
+| threshold | Minimum confidence threshold for detected objects. For example, use 0.5 to receive only detected objects with a confidence equal-to or higher-than 0.5. | 0.5 |
+| top_k | The maximum number of detected objects to return. | 15 |
+
+Image stream with bounding boxes, scores, and lables is then published to topic:  
 ```
-
-Image stream with bounding boxes, scores, and lables is then published to [ROBOT_NAME]/coral_object_detection/image/compressed topic.
-
+[ROBOT_NAME]/coral_object_detection/image/compressed
+```
 ## Instructions to run emergency stop demo
 
 ### 1. Make sure you have plugged in Google Coral Edge TPU USB Accelerator to Duckiebot, then run docker image with the following options
