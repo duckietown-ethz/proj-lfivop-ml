@@ -107,15 +107,16 @@ Before you try to run a training for duckietown object detection training on IDS
 6. Run the following commands from the `proj-lfivop-ml/dt-object-detection-training` directory:
     1. Run Dataset preparation command in the Docker container (`bash -c launch/dataset_preparation.sh`)
     2. SSH into IDSC Rudolf while sharing the port 6067 with your local computer, in order that you can access TensorBoard in your browser
-    3. Start screen with `screen`
-    4. Run TensorBoard command in the Docker container (`bash -c launch/tensorboard.sh`)
-    5. Open new window in screen with `Ctrl-a c`
-    6. Run Training command in the Docker container (`bash -c launch/training.sh`) while specifying number of training steps and the chosen model
-    7. Detach screen with `Ctrl-a d`
-    8. Monitor training progress on TensorBoard
-    9. After the training finished, choose the checkpoint, you want to use for exporting the inference graph
-    10. Run the Edge-TPU inference graph export command in the Docker container: (`bash -c launch/inference_graph_edgetpu_export.sh`) while specifying the checkpoint number
-    11. Clean up IDSC Rudolf by stopping all running containers (`docker ps` to find the container ids and `docker stop container_id` to stop the container) and removing the working directory with `rm -r`
+    3. Pull the recent Docker image from Docker Hub
+    4. Start screen with `screen`
+    5. Run TensorBoard command in the Docker container (`bash -c launch/tensorboard.sh`)
+    6. Open new window in screen with `Ctrl-a c`
+    7. Run Training command in the Docker container (`bash -c launch/training.sh`) while specifying number of training steps and the chosen model
+    8. Detach screen with `Ctrl-a d`. This will ensure, that the training keeps running, even if your SSH tunnel is closed
+    9. Monitor training progress on TensorBoard
+    10. After the training finished, choose the checkpoint, you want to use for exporting the inference graph
+    11. Run the Edge-TPU inference graph export command in the Docker container: (`bash -c launch/inference_graph_edgetpu_export.sh`) while specifying the checkpoint number
+    12. Clean up IDSC Rudolf by stopping all running containers (`docker ps` to find the container ids and `docker stop container_id` to stop the container) and removing the working directory with `rm -r`
 7. Copy the working directory from IDSC Rudolf back to your local computer including all the checkpoints using `scp` (might take a while)
 
 ### Build:
@@ -134,6 +135,8 @@ SSH into IDSC Rudolf:
 ```
 ssh lfivop-ml@idsc-rudolf.ethz.ch -L 6067:127.0.0.1:6067
 ```
+
+### Use of screens on IDSC Rudolf
 Screen can be used to manage multiple terminal sessions and detach them in order that the training keeps running:
 https://kb.iu.edu/d/acuy
 ```
@@ -149,25 +152,19 @@ screen -r
 exit
 ```
 
-### Prepare TensorFlow WORKDIR
-
-1. Create `workdir` directory in home directory of RUDOLF account
-2. Copy contents of `tf_wordir_sample directory` from REPO into  `workdir`
-3. Place `mscoco_train.record` into `workdir/data` directory
-
-Copy from localhost to RUDOLF:
+### Copy WORKDIR to IDSC Rudolf
+Copy the prepared WORKDIR from localhost to RUDOLF:
 
 ```
 scp -r YOUR_LOCAL_WORKDIR/ lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/workdir/
 ```
 
-### Run
-
-Pull docker image:
+## Pull Docker Image
 ```
 docker pull mstoelzle/dt-object-detection-training:latest-gpu
 ```
 
+### Run Training
 Run TensorBoard:
 ```
 docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu bash -c launch/tensorboard.sh
@@ -181,12 +178,13 @@ Run Training:
 docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CUDA_VISIBLE_DEVICES=2 -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu
 ```
 
-### export training checkpoints
+### Copy WORKDIR from IDSC Rudolf to local computer
+Copy back checkpoints and training results to your local computer. This step might take a while.
 ```
 scp -r lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/workdir/ YOUR_LOCAL_WORKDIR/
 ```
 
-## Config of Working directory
+## Config Working directory
 Structure of working directory which must be attached as volume to container.
 
 `+` describes a directory and `-` a file
