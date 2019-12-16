@@ -18,7 +18,7 @@ dts devel build -f --arch arm32v7 -H [ROBOT_NAME].local
 ```
 Building the image for the first time can take up to 30 minutes.
 
-### 3. Make sure you have pluggen in Google Coral Edge TPU USB Accelerator, then run docker image in Duckiebot with the following options
+### 3. Make sure you have plugged in Google Coral Edge TPU USB Accelerator to Duckiebot, then run docker image with the following options
  
 ```bash
 docker -H [ROBOT_NAME].local run -it --rm --net=host -v /dev/bus/usb:/dev/bus/usb -e model_name=MODEL_NAME --privileged duckietown/googlecoral-duckiebot:v1-arm32v7
@@ -39,4 +39,13 @@ The image stream resolution is set to default at 320x240 px. You can change the 
 docker -H [ROBOT_NAME].local run -it --rm --net=host -e resolution_w=640 -v /dev/bus/usb:/dev/bus/usb --privileged duckietown/googlecoral-duckiebot:v1-arm32v7
 ```
 
-Image stream with bounding boxes, scores, and lables is then published. To avoid Google Coral not detected by the Raspberry Pi, make sure to plug it in before powering up the Raspberry Pi. 
+Image stream with bounding boxes, scores, and lables is then published.
+
+## Instructions to run emergency stop demo
+
+### 1. Make sure you have plugged in Google Coral Edge TPU USB Accelerator to Duckiebot, then run docker image with the following options
+
+```bash
+docker -H [ROBOT_NAME].local run -it --rm --net=host -v /dev/bus/usb:/dev/bus/usb -v /data:/data -e model_name=MODEL_NAME --privileged duckietown/googlecoral-duckiebot:v1-arm32v7 bash -c packages/launch_emergencystop_demo/emergencystop_demo.sh
+```
+Your duckiebot will move in a straight line. It will stop when detect Duckie or Duckiebot close upfront.
