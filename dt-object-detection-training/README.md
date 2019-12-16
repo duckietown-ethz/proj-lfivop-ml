@@ -1,42 +1,24 @@
 # Duckietown Object Detection ML Training
+This README will give you some instructions on how to run the Duckietown object detection training either on your local computer or on _IDSC Rudolf_. Additionally, it will give you some Troubleshooting advice.
 
-## Working directory
-Structure of working directory which must be attached as volume to container.
+## Instructions for running training on LOCALHOST
 
-`+` describes a directory and `-` a file
-```
-+workdir
-    + config
-      - dt_locational_weights.json
-    +raw_data
-      - Annotations.csv
-      + images
-    +data
-      - dt_mscoco_label_map.pbtxt
-      - dt_mscoco_train.record
-      - dt_mscoco_val.record
-      - dt_mscoco_test.record
-    +models
-      + model
-        - pipeline.conf
-        + train
-        + eval
-```
-## LOCALHOST
-
-## Pre-flight checklist
+### Pre-flight checklist
 Before you try to run a training for duckietown object detection on your localhost, make sure you have prepared the following things:
 1. Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker](https://docs.docker.com/install/)
 2. Give Docker sufficient resources on your local computer (increase allocated memory and swap-storage), otherwise TensorFlow will kill the training
 3. Clone this repository to your local computer: `git clone https://github.com/duckietown-ethz/proj-lfivop-ml.git`
 4. Initialize Git submodules
-5. Prepare working directory
-6. Run the following commands from the `proj-lfivop-ml/dt-object-detection-training` directory:
+4. Choose (pre-trained) model which you want to use for training. The model needs to be quantized in order for the inference to work on the Edge-TPU. Recommended is using the pre-trained `ssd_mobilenet_v2_quantized_300x300_coco` model
+6. Prepare working directory
+7. Run the following commands from the `proj-lfivop-ml/dt-object-detection-training` directory:
     1. Build either the CPU or the GPU version of the Docker container, depending on if your graphic card supports _Nvidia CUDA_
     2. Run Dataset preparation command in the Docker container (`bash -c launch/dataset_preparation.sh`)
     3. Run TensorBoard command in the Docker container (`bash -c launch/tensorboard.sh`)
-    4. Run Training command in the Docker container (`bash -c launch/training.sh`)
-    5. Run the Edge-TPU inference graph export command in the Docker container: (`bash -c launch/inference_graph_edgetpu_export.sh`)
+    4. Run Training command in the Docker container (`bash -c launch/training.sh`) while specifying number of training steps and the chosen model
+    5. Monitor training progress on TensorBoard
+    9. After the training finished, choose the checkpoint, you want to use for exporting the inference graph
+    10. Run the Edge-TPU inference graph export command in the Docker container: (`bash -c launch/inference_graph_edgetpu_export.sh`) while specifying the checkpoint number
 
 ### Git submodule initialization
 We use git submodules for the tensorflow/models and cocoapi repository. 
@@ -114,7 +96,28 @@ docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300
 docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest /bin/bash
 ```
 
-## IDSC RUDOLF
+## Instructions for running training on IDSC RUDOLF
+### Pre-flight checklist
+Before you try to run a training for duckietown object detection training on IDSC Rudolf, make sure you have prepared the following things:
+1. Granted IDSC Rudolf account with Docker privileges
+2. Pushed the `proj-lfivop-ml` repository to Github. _Github Actions_ will automatically build the docker container (both CPU and GPU versions) and push them to Docker Hub (_mstoelzle_ account)
+3. Prepare working directory
+4. Choose (pre-trained) model which you want to use for training. The model needs to be quantized in order for the inference to work on the Edge-TPU. Recommended is using the pre-trained `ssd_mobilenet_v2_quantized_300x300_coco` model
+5. Copy working directory to IDSC Rudolf using `scp`
+6. Run the following commands from the `proj-lfivop-ml/dt-object-detection-training` directory:
+    1. Run Dataset preparation command in the Docker container (`bash -c launch/dataset_preparation.sh`)
+    2. SSH into IDSC Rudolf while sharing the port 6067 with your local computer, in order that you can access TensorBoard in your browser
+    3. Start screen with `screen`
+    4. Run TensorBoard command in the Docker container (`bash -c launch/tensorboard.sh`)
+    5. Open new window in screen with `Ctrl-a c`
+    6. Run Training command in the Docker container (`bash -c launch/training.sh`) while specifying number of training steps and the chosen model
+    7. Detach screen with `Ctrl-a d`
+    8. Monitor training progress on TensorBoard
+    9. After the training finished, choose the checkpoint, you want to use for exporting the inference graph
+    10. Run the Edge-TPU inference graph export command in the Docker container: (`bash -c launch/inference_graph_edgetpu_export.sh`) while specifying the checkpoint number
+    11. Clean up IDSC Rudolf by stopping all running containers (`docker ps` to find the container ids and `docker stop container_id` to stop the container) and removing the working directory with `rm -r`
+7. Copy the working directory from IDSC Rudolf back to your local computer including all the checkpoints using `scp` (might take a while)
+
 ### Build:
 Build on localhost for GPU:
 ```
@@ -126,7 +129,7 @@ Push to Docker Hub:
 docker push mstoelzle/dt-object-detection-training:latest-gpu
 ```
 
-### SSH in to IDSC Rudolf:
+### SSH into IDSC Rudolf:
 SSH into IDSC Rudolf:
 ```
 ssh lfivop-ml@idsc-rudolf.ethz.ch -L 6067:127.0.0.1:6067
@@ -134,13 +137,15 @@ ssh lfivop-ml@idsc-rudolf.ethz.ch -L 6067:127.0.0.1:6067
 Screen can be used to manage multiple terminal sessions and detach them in order that the training keeps running:
 https://kb.iu.edu/d/acuy
 ```
-# start window
+# start screen
 screen
-# detach window (within window)
+# create window
+Ctrl-a c
+# detach screen
 Ctrl-a d
-# resume window
+# resume screen
 screen -r
-# exit window (within window)
+# exit window
 exit
 ```
 
@@ -179,4 +184,27 @@ docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300
 ### export training checkpoints
 ```
 scp -r lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/workdir/ YOUR_LOCAL_WORKDIR/
+```
+
+## Config of Working directory
+Structure of working directory which must be attached as volume to container.
+
+`+` describes a directory and `-` a file
+```
++workdir
+    + config
+      - dt_locational_weights.json
+    +raw_data
+      - Annotations.csv
+      + images
+    +data
+      - dt_mscoco_label_map.pbtxt
+      - dt_mscoco_train.record
+      - dt_mscoco_val.record
+      - dt_mscoco_test.record
+    +models
+      + model
+        - pipeline.conf
+        + train
+        + eval
 ```
