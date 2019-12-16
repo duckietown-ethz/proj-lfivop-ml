@@ -12,7 +12,6 @@ import json
 import time
 import yaml
 
-
 class Detector(DTROS):
 
     def __init__(self, node_name):
@@ -163,8 +162,8 @@ class Detector(DTROS):
         u = int((prediction['startX'] + prediction['endX']) / 2)
         v = max(prediction['startY'], prediction['endY'])
 
-        # prediction certainty should be higher than 75% for emergency stop
-        if prediction['score'] > 0.75:
+        # prediction certainty should be higher than 60% for emergency stop
+        if prediction['score'] > 0.60:
             # activate emergency stop if object is Duckie or Duckiebot
             if prediction['label'] == 'Duckie' or prediction['label'] == 'Duckiebot':
                 # activate emergency stop if object is in horizontal center half and in lower quarter of image
