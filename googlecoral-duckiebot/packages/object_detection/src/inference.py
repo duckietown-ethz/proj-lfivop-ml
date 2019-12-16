@@ -20,22 +20,42 @@ print("[INFO] loading Edge TPU model...")
 
 # Specify model name. Choices are: augmentation, class, localization, class_localization, vanilla 
 try:
-	model_name = str(os.environ['model_name'])
+	MODEL_NAME = str(os.environ['model_name'])
 except:
     print("Model is not specified. To specify, set environment variable model_name to your model choice (e.g. -e model_name=MODEL_NAME).")
     print("Choices are: augmentation, class, localization, class_localization, vanilla")
     print("Model is set to default (class_localization)")
     
-    model_name = "class_localization"
+    MODEL_NAME = "class_localization"
 
-if model_name not in ["augmentation", "class", "localization", "class_localization", "vanilla"]:
+if MODEL_NAME not in ["augmentation", "class", "localization", "class_localization", "vanilla"]:
     print("No correct model is chosen. Model is set to default (class_localization).")
-    model_name = "class_localization"
+    MODEL_NAME = "class_localization"
 
-model = DetectionEngine("/code/catkin_ws/src/coral/packages/object_detection/src/dt_inference_models/dt_{}_edgetpu.tflite".format(model_name))
-print("[INFO] dt_{}_edgetpu.tflite is loaded successfully".format(model_name))
+# Retrieve threshold
+try:
+	THRESHOLD = float(os.environ['threshold'])
+except:
+	THRESHOLD = 0.5    
+
+# Retrieve top_k
+try:
+	TOP_K = int(os.environ['top_k'])
+except:
+	TOP_K = 15
+
+print("model: {}".format(MODEL_NAME))
+print("threshold: {}".format(THRESHOLD))   
+print("top_k: {}".format(TOP_K))
+
+# Load detection model
+model = DetectionEngine("/code/catkin_ws/src/coral/packages/object_detection/src/dt_inference_models/dt_{}_edgetpu.tflite".format(MODEL_NAME))
+print("[INFO] dt_{}_edgetpu.tflite is loaded successfully".format(MODEL_NAME))
+
+# Initialize FPS
 FPS = []
 AvgFPS = 0
+
 while True:
 	try:
 		start_time = time.time()
@@ -45,7 +65,7 @@ while True:
 		frame = Image.fromarray(frame)
 
 		# Execute inference
-		results = model.detect_with_image(frame, threshold=0.5, top_k=15, keep_aspect_ratio=True, relative_coord=False)
+		results = model.detect_with_image(frame, threshold=THRESHOLD, top_k=TOP_K, keep_aspect_ratio=True, relative_coord=False)
 		
 		# Initialize empty dictionary and list
 		d = {}

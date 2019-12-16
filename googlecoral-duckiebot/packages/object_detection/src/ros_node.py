@@ -26,6 +26,7 @@ class Detector(DTROS):
         #Load camera resolution
         try:
             self.res_w = int(os.environ['resolution_w'])
+            rospy.loginfo("Resolution is set to {} x {} px.".format(self.res_w, self.res_w*3/4))
         except:
             rospy.loginfo("The environment variable resolution_w is not set. Resolution is set to default (320x240).")
             self.res_w = 320
