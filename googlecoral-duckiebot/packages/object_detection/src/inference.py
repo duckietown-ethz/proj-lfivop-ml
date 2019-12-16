@@ -4,20 +4,36 @@ from PIL import Image
 import numpy as np
 import json
 import time
+import os
 
 # loop over the class labels file
 labels = {}
 colors = {}
 for row in open("/code/catkin_ws/src/coral/packages/object_detection/src/duckie_labels_colors.txt"):
 	# unpack the row and update labels and colors dictionaries
-	(classID, description) = row.strip().split(maxsplit=1)
-	(label,color) = description.strip().split(";")
+	(classID, label, color) = row.strip().split(";")
 	labels[int(classID)] = label.strip()
 	colors[int(classID)] = color.strip()
 
 # load the Google Coral object detection model
 print("[INFO] loading Edge TPU model...")
-model = DetectionEngine("/code/catkin_ws/src/coral/packages/object_detection/src/dt_inference_models/ssdv2_standardweight_edgetpu.tflite")
+
+# Specify model name. Choices are: augmentation, class, localization, class_localization, vanilla 
+try:
+	model_name = str(os.environ['model_name'])
+except:
+    print("Model is not specified. To specify, set environment variable model_name to your model choice (e.g. -e model_name=MODEL_NAME).")
+    print("Choices are: augmentation, class, localization, class_localization, vanilla")
+    print("Model is set to default (class_localization)")
+    
+    model_name = "class_localization"
+
+if model_name not in ["augmentation", "class", "localization", "class_localization", "vanilla"]:
+    print("No correct model is chosen. Model is set to default (class_localization).")
+    model_name = "class_localization"
+
+model = DetectionEngine("/code/catkin_ws/src/coral/packages/object_detection/src/dt_inference_models/dt_{}_edgetpu.tflite".format(model_name))
+print("[INFO] dt_{}_edgetpu.tflite is loaded successfully".format(model_name))
 FPS = []
 AvgFPS = 0
 while True:
@@ -29,7 +45,7 @@ while True:
 		frame = Image.fromarray(frame)
 
 		# Execute inference
-		results = model.detect_with_image(frame, threshold=0.3, top_k=20, keep_aspect_ratio=True, relative_coord=False)
+		results = model.detect_with_image(frame, threshold=0.5, top_k=15, keep_aspect_ratio=True, relative_coord=False)
 		
 		# Initialize empty dictionary and list
 		d = {}
@@ -66,4 +82,3 @@ while True:
 
 	except (ValueError, FileNotFoundError):
 		pass
-
