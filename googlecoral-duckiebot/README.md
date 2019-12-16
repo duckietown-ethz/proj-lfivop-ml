@@ -52,4 +52,4 @@ Image stream with bounding boxes, scores, and lables is then published to topic:
 ```bash
 docker -H [ROBOT_NAME].local run -it --rm --net=host -v /dev/bus/usb:/dev/bus/usb -v /data:/data -e model_name=MODEL_NAME --privileged duckietown/googlecoral-duckiebot:v1-arm32v7 bash -c packages/launch_emergencystop_demo/emergencystop_demo.sh
 ```
-Your duckiebot will move in a straight line. It will stop when detect Duckie or Duckiebot close upfront.
+Your duckiebot will move in a straight line. It will stop when detect Duckie or Duckiebot close upfront with confidence level more than 75%.
