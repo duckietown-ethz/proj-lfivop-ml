@@ -1,4 +1,5 @@
 # Duckietown Object Detection ML Training
+
 ## Working directory
 Structure of working directory which must be attached as volume to container.
 
@@ -25,6 +26,12 @@ Structure of working directory which must be attached as volume to container.
 We use Docker to run our scripts. Please execute these command in this directory.
 
 **Important:** Don't forget to increase the allocated memory and swap-storage of docker, otherwise TensorFlow will get killed
+
+## Pre-flight checklist
+Before you try to run a training for duckietown object detection on your localhost, make sure you have prepared the following things:
+1. Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+2. Install [Docker](https://docs.docker.com/install/)
+3. Clone this repository to your local computer: `git clone https://github.com/duckietown-ethz/proj-lfivop-ml.git`
 
 ### Git submodule initialization
 We use git submodules for the tensorflow/models and cocoapi repository. 
@@ -57,11 +64,6 @@ Run Dataset preparation:
 docker run -it -e VAL_1_OF_N_IMAGES=10  -e TEST_1_OF_N_IMAGES=10 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/dataset_preparation.sh
 ```
 
-Run Dataset preparation (Maxi):
-```
-docker run -it -e VAL_1_OF_N_IMAGES=10 -e TEST_1_OF_N_IMAGES=10 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/dt-object-detection-training-workdir:/workdir mstoelzle/dt-object-detection-training:latest launch/dataset_preparation.sh
-```
-
 ### Prepare TensorFlow WORKDIR
 1. Create `workdir` directory somewhere on your local drive
 2. Copy contents of `tf_wordir_sample directory/models` from REPO into local `workdir/models`
@@ -85,21 +87,11 @@ Run TensorBoard:
 docker run -u $(id -u):$(id -g) -it -p 6006:6006 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
 ```
 
-Run TensorBoard (Maxi):
-```
-docker run -u $(id -u):$(id -g) -it -p 6006:6006 -v /Users/maximilianstoelzle/Documents/ethz/AMoD/dt-object-detection-training-workdir:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
-```
-
 Access Tensorboard: http://localhost:6006/
 
 Run Training:
 ```
 docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest
-```
-
-Run Training (Maxi):
-```
-docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v /Users/maximilianstoelzle/Documents/ethz/AMoD/dt-object-detection-training-workdir:/workdir mstoelzle/dt-object-detection-training:latest
 ```
 
 ### Run export of inference graph
