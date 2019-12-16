@@ -23,15 +23,20 @@ Structure of working directory which must be attached as volume to container.
         + eval
 ```
 ## LOCALHOST
-We use Docker to run our scripts. Please execute these command in this directory.
-
-**Important:** Don't forget to increase the allocated memory and swap-storage of docker, otherwise TensorFlow will get killed
 
 ## Pre-flight checklist
 Before you try to run a training for duckietown object detection on your localhost, make sure you have prepared the following things:
-1. Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-2. Install [Docker](https://docs.docker.com/install/)
+1. Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker](https://docs.docker.com/install/)
+2. Give Docker sufficient resources on your local computer (increase allocated memory and swap-storage), otherwise TensorFlow will kill the training
 3. Clone this repository to your local computer: `git clone https://github.com/duckietown-ethz/proj-lfivop-ml.git`
+4. Initialize Git submodules
+5. Prepare working directory
+6. Run the following commands from the `proj-lfivop-ml/dt-object-detection-training` directory:
+    1. Build either the CPU or the GPU version of the Docker container, depending on if your graphic card supports _Nvidia CUDA_
+    2. Run Dataset preparation command in the Docker container (`bash -c launch/dataset_preparation.sh`)
+    3. Run TensorBoard command in the Docker container (`bash -c launch/tensorboard.sh`)
+    4. Run Training command in the Docker container (`bash -c launch/training.sh`)
+    5. Run the Edge-TPU inference graph export command in the Docker container: (`bash -c launch/inference_graph_edgetpu_export.sh`)
 
 ### Git submodule initialization
 We use git submodules for the tensorflow/models and cocoapi repository. 
