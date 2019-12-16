@@ -39,7 +39,7 @@ The image stream resolution is set to default at 320x240 px. You can change the 
 docker -H [ROBOT_NAME].local run -it --rm --net=host -e resolution_w=640 -v /dev/bus/usb:/dev/bus/usb --privileged duckietown/googlecoral-duckiebot:v1-arm32v7
 ```
 
-Image stream with bounding boxes, scores, and lables is then published.
+Image stream with bounding boxes, scores, and lables is then published to [ROBOT_NAME]/coral_object_detection/image/compressed topic.
 
 ## Instructions to run emergency stop demo
 
