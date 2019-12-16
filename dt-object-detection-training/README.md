@@ -116,7 +116,8 @@ Before you try to run a training for duckietown object detection training on IDS
     9. Monitor training progress on TensorBoard
     10. After the training finished, choose the checkpoint, you want to use for exporting the inference graph
     11. Run the Edge-TPU inference graph export command in the Docker container: (`bash -c launch/inference_graph_edgetpu_export.sh`) while specifying the checkpoint number
-    12. Clean up IDSC Rudolf by stopping all running containers (`docker ps` to find the container ids and `docker stop container_id` to stop the container) and removing the working directory with `rm -r`
+    12. Resume the screen session using `screen -r`, then cycle through all the windows (`Ctrl-a n`) and exit the window (`exit`) which will stop all running processes in the window
+    13. Clean up IDSC Rudolf by stopping all running containers (`docker ps` to find the container ids and `docker stop container_id` to stop the container) and removing the working directory with `rm -r`
 7. Copy the working directory from IDSC Rudolf back to your local computer including all the checkpoints using `scp` (might take a while)
 
 ### Build:
