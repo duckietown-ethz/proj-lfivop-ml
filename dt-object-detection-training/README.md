@@ -74,7 +74,7 @@ Run TensorBoard:
 docker run -u $(id -u):$(id -g) -it -p 6006:6006 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
 ```
 
-Access Tensorboard: http://localhost:6006/
+Access TensorBoard: http://localhost:6006/
 
 Run Training:
 ```
@@ -160,7 +160,7 @@ Copy the prepared WORKDIR from localhost to RUDOLF:
 scp -r YOUR_LOCAL_WORKDIR/ lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/workdir/
 ```
 
-## Pull Docker Image
+### Pull Docker Image
 ```
 docker pull mstoelzle/dt-object-detection-training:latest-gpu
 ```
