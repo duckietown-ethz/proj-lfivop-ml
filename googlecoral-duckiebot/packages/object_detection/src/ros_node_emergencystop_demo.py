@@ -38,8 +38,8 @@ class Detector(DTROS):
         # if Duckie or Duckiebot are detected close-by
         self.objdet_emergency_stop = True
 
-        # Initialize emergency stop object
-        self.emergency_stop = False
+        # Initialize emergency stop vote
+        self.emergency_stop_vote = 0
 
         # Initialize FPS
         self.fps = str(0)
@@ -146,13 +146,13 @@ class Detector(DTROS):
                 self.draw_prediction(orig, prediction)
 
                 if self.objdet_emergency_stop is True:
-                    self.emergency_stop = self.assess_emergency_stop(prediction)
-                    if self.emergency_stop == True:
+                    self.emergency_stop_vote = self.assess_emergency_stop(prediction)
+                    # we only activate the emergency stop, if numerous frames voted for it
+                    if self.emergency_stop_vote > 10:
                         self.msg_wheels_cmd.vel_left = 0
                         self.msg_wheels_cmd.vel_right = 0
                         self.pub_wheels.publish(self.msg_wheels_cmd)
-
-                    if self.emergency_stop == False:
+                    else:
                         correction_constant = 100 / 3
                         vel_left, vel_right = self.speedToCmd(0.15 * correction_constant, 0.15 * correction_constant)
                         self.msg_wheels_cmd.vel_left = vel_left
@@ -236,7 +236,12 @@ class Detector(DTROS):
                 # if pixel.v >= 2/3.0*self.res_h and 1 / 4.0 * self.res_w <= pixel.u <= 3 / 4.0 * self.res_w:
                 #     emergency_stop = True
 
-        return emergency_stop
+        if emergency_stop:
+            emergency_stop_vote = min(30, self.emergency_stop_vote+1)
+        else:
+            emergency_stop_vote = max(0, self.emergency_stop_vote-1)
+
+        return emergency_stop_vote
 
     def speedToCmd(self, speed_l, speed_r):
         """Applies the robot-specific gain and trim to the
