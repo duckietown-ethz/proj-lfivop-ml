@@ -23,11 +23,12 @@ from duckietown_utils.path_utils import get_ros_package_path
 from duckietown_utils.yaml_wrap import (yaml_load_file, yaml_write_to_file)
 from duckietown_utils import (logger, get_duckiefleet_root)
 
+
 class Detector(DTROS):
 
     def __init__(self, node_name):
 
-    	# Initialize the DTROS parent class
+        # Initialize the DTROS parent class
         super(Detector, self).__init__(node_name=node_name)
 
         # Get vehicle name
@@ -42,7 +43,7 @@ class Detector(DTROS):
 
         # Initialize FPS
         self.fps = str(0)
-        
+
         # Initialize wheels command         
         self.msg_wheels_cmd = WheelsCmdStamped()
 
@@ -81,8 +82,9 @@ class Detector(DTROS):
         rospy.loginfo("Publishing image")
         self.sub_image = rospy.Subscriber("/{}/camera_node/image/compressed".format(self.veh_name), CompressedImage,
                                           self.callback, queue_size=1)
-        
-        self.pub_wheels = rospy.Publisher("/{}/wheels_driver_node/wheels_cmd".format(self.veh_name), WheelsCmdStamped, queue_size=1)
+
+        self.pub_wheels = rospy.Publisher("/{}/wheels_driver_node/wheels_cmd".format(self.veh_name), WheelsCmdStamped,
+                                          queue_size=1)
 
         # our object detection works with raw, non-rectified images
         self.rectified_input = False
@@ -146,15 +148,15 @@ class Detector(DTROS):
                         self.pub_wheels.publish(self.msg_wheels_cmd)
 
                     if self.emergency_stop == False:
-                        correction_constant = 100/3
-                        vel_left, vel_right = self.speedToCmd(0.15*correction_constant, 0.15*correction_constant)
+                        correction_constant = 100 / 3
+                        vel_left, vel_right = self.speedToCmd(0.15 * correction_constant, 0.15 * correction_constant)
                         self.msg_wheels_cmd.vel_left = vel_left
                         self.msg_wheels_cmd.vel_right = vel_right
-                        self.pub_wheels.publish(self.msg_wheels_cmd)          	
+                        self.pub_wheels.publish(self.msg_wheels_cmd)
 
         except Exception as e:
-            correction_constant = 100/3
-            vel_left, vel_right = self.speedToCmd(0.15*correction_constant, 0.15*correction_constant)
+            correction_constant = 100 / 3
+            vel_left, vel_right = self.speedToCmd(0.15 * correction_constant, 0.15 * correction_constant)
             self.msg_wheels_cmd.vel_left = vel_left
             self.msg_wheels_cmd.vel_right = vel_right
             self.pub_wheels.publish(self.msg_wheels_cmd)
@@ -166,7 +168,7 @@ class Detector(DTROS):
         # Publish image
         compressed_img = br.cv2_to_compressed_imgmsg(orig, dst_format='jpg')
         self.pub_coral_image.publish(compressed_img)
-       
+
         if rospy.is_shutdown():
             self.rate = rospy.Rate(0.1)
 
@@ -202,7 +204,7 @@ class Detector(DTROS):
         cv2.putText(img, text, (startX, y_text), font, font_scale, font_color, font_thickness)
 
     def assess_emergency_stop(self, prediction):
-    	emergency_stop = False
+        emergency_stop = False
 
         # we use centerpoint of lower edge of image for assessment, as ground projection works best for it
         pixel = Pixel()
@@ -258,9 +260,9 @@ class Detector(DTROS):
         k_l = self.parameters['~k']
 
         # adjusting k by gain and trim
-        k_r_inv = (self.parameters['~gain'] + self.parameters['~trim'])\
+        k_r_inv = (self.parameters['~gain'] + self.parameters['~trim']) \
                   / k_r
-        k_l_inv = (self.parameters['~gain'] - self.parameters['~trim'])\
+        k_l_inv = (self.parameters['~gain'] - self.parameters['~trim']) \
                   / k_l
 
         # conversion from motor rotation rate to duty cycle
@@ -299,7 +301,7 @@ class Detector(DTROS):
                 yaml_dict = yaml.load(in_file)
             except yaml.YAMLError as exc:
                 self.log("YAML syntax error. File: %s fname. Exc: %s"
-                         %(fname, exc), type='fatal')
+                         % (fname, exc), type='fatal')
                 rospy.signal_shutdown()
                 return
 
@@ -310,7 +312,7 @@ class Detector(DTROS):
         for param_name in ["gain", "trim", "baseline", "k", "radius", "limit"]:
             param_value = yaml_dict.get(param_name)
             if param_name is not None:
-                rospy.set_param("~"+param_name, param_value)
+                rospy.set_param("~" + param_name, param_value)
             else:
                 # Skip if not defined, use default value instead.
                 pass
@@ -452,7 +454,8 @@ class Detector(DTROS):
         self.msg_wheels_cmd.vel_left = 0
         self.msg_wheels_cmd.vel_right = 0
         self.pub_wheels.publish(self.msg_wheels_cmd)
-        super(Detector, self).onShutdown()               
+        super(Detector, self).onShutdown()
+
 
 if __name__ == '__main__':
     # Initialize the node
