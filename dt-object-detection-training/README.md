@@ -208,17 +208,25 @@ Structure of working directory which must be attached as volume to container.
         + train
         + eval
 ```
-### Environment Variables for Docker container
-| environment variable  | default | description | 
+
+### Build Arguments for Docker image
+| build argument  | description | default |
 | ------------- | ------------- |  ------------- | 
-| MODEL_NAME | dt_ssd_mobilenet_v2_coco | Name of the model directory in `workdir/models` which is used for training and inference graph generation  |
-| TB_PORT | 6006 | Specifies the port where the TensorBoard is published (inside container) |
-| CUDA_VISIBLE_DEVICES | 1 | The number of GPUs the TensorFlow will use during training on IDSC Rudolf |
-| NUM_TRAIN_STEPS | 50000 | The number of training steps before TensorFlow stops the training. |
-| CHECKPOINT_NUMBER | 0 | Specifies the training checkpoint, which should be used to export the inference graph (for example 50000) |
-| VAL_1_OF_N_IMAGES | 10 | Specifies the split of the validation set. 1 of every N images are assigned to the validation set. VAL_1_OF_N_IMAGES specifies N. |
-| TEST_1_OF_N_IMAGES | 10 | Specifies the split of the test set. 1 of every N images are assigned to the test set. TEST_1_OF_N_IMAGES specifies N. |
-| DUCKIEBOT_CALIBRATION_HOSTNAME | default | Specifies the hostname of the Duckiebot used to export the intrinsic and extrinsic camera calibration files to generate locational weights |
+| GPU | Specifies if image is built for the use with a GPU acceleration and includes tensorflow-gpu. For an empty string, the CPU version is built, while for a string "gpu" the GPU version is built. |  |
+| REPO_NAME | The name of the repository directory in the container where the relevant files are copied to | dt-object-detection-training |
+| TF_PACKAGE_VERSION | Specifies the used TensorFlow version. | 1.15.0 |
+
+### Environment Variables for Docker container
+| environment variable  | description | default |
+| ------------- | ------------- |  ------------- | 
+| MODEL_NAME | Name of the model directory in `workdir/models` which is used for training and inference graph generation | dt_ssd_mobilenet_v2_coco |
+| TB_PORT | Specifies the port where the TensorBoard is published (inside container) | 6006 |
+| CUDA_VISIBLE_DEVICES | The number of GPUs the TensorFlow will use during training on IDSC Rudolf | 1 |
+| NUM_TRAIN_STEPS | The number of training steps before TensorFlow stops the training. | 50000 |
+| CHECKPOINT_NUMBER | Specifies the training checkpoint, which should be used to export the inference graph (for example 50000) | 0 |
+| VAL_1_OF_N_IMAGES | Specifies the split of the validation set. 1 of every N images are assigned to the validation set. VAL_1_OF_N_IMAGES specifies N. | 10 |
+| TEST_1_OF_N_IMAGES | Specifies the split of the test set. 1 of every N images are assigned to the test set. TEST_1_OF_N_IMAGES specifies N. | 10 |
+| DUCKIEBOT_CALIBRATION_HOSTNAME | Specifies the hostname of the Duckiebot used to export the intrinsic and extrinsic camera calibration files to generate locational weights | default |
 
 ## Troubleshooting and Tips 
 
