@@ -1,6 +1,11 @@
 # Duckietown Object Detection ML Training
 This README will give you some instructions on how to run the Duckietown object detection training either on your local computer or on _IDSC Rudolf_. Additionally, it will give you some Troubleshooting advice.
 
+## Instructions to prepare Workdir
+1. Create `workdir` directory somewhere on your local drive
+2. Copy contents of `workdir_sample` from REPO into local `workdir`
+3. Place any additional annotations and raw images for the training into the `workdir/raw_data` folder 
+
 ## Instructions for running training on LOCALHOST
 
 ### Pre-flight checklist
@@ -8,19 +13,10 @@ Before you try to run a training for duckietown object detection on your localho
 1. Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker](https://docs.docker.com/install/)
 2. Give Docker sufficient resources on your local computer (increase allocated memory and swap-storage), otherwise TensorFlow will kill the training
 3. Clone this repository to your local computer: `git clone https://github.com/duckietown-ethz/proj-lfivop-ml.git`
-4. Initialize Git submodules
 4. Choose (pre-trained) model which you want to use for training. The model needs to be quantized in order for the inference to work on the Edge-TPU. Recommended is using the pre-trained `ssd_mobilenet_v2_quantized_300x300_coco` model
-6. Prepare working directory
-7. Run the following commands from the `proj-lfivop-ml/dt-object-detection-training` directory:
-    1. Build either the CPU or the GPU version of the Docker container, depending on if your graphic card supports _Nvidia CUDA_
-    2. Run Dataset preparation command in the Docker container (`bash -c launch/dataset_preparation.sh`)
-    3. Run TensorBoard command in the Docker container (`bash -c launch/tensorboard.sh`)
-    4. Run Training command in the Docker container (`bash -c launch/training.sh`) while specifying number of training steps and the chosen model
-    5. Monitor training progress on TensorBoard
-    9. After the training finished, choose the checkpoint, you want to use for exporting the inference graph
-    10. Run the Edge-TPU inference graph export command in the Docker container: (`bash -c launch/inference_graph_edgetpu_export.sh`) while specifying the checkpoint number
+5. Prepare workdir directory
 
-### Git submodule initialization
+### 1. Git submodule initialization
 We use git submodules for the tensorflow/models and cocoapi repository. 
 After cloning this repository, you need to initialize the git submodules first:
 ```
@@ -31,7 +27,9 @@ git submodule init && git submodule update
 git submodule update --remote
 ```
 
-### Build
+### 2. Build
+Run the building commands from within the `proj-lfivop-ml/dt-object-detection-training` directory.
+
 Build CPU version:
 ```
 docker build -f ./Dockerfile -t mstoelzle/dt-object-detection-training:latest .
@@ -41,34 +39,15 @@ Build GPU version:
 docker build --build-arg GPU=-gpu -f ./Dockerfile -t mstoelzle/dt-object-detection-training:latest-gpu .
 ```
 
-### Prepare Duckietown Dataset
-1. Create `workdir` directory somewhere on your local drive
-2. Create directory `raw_data` in `workdir`
-3. Copy `Annotations.csv` and `images` folder into `raw_data` directory
-
+### 3. Prepare Duckietown Dataset
 Run Dataset preparation:
 ```
 docker run -it -e VAL_1_OF_N_IMAGES=10  -e TEST_1_OF_N_IMAGES=10 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/dataset_preparation.sh
 ```
 
-### Prepare TensorFlow WORKDIR
-1. Create `workdir` directory somewhere on your local drive
-2. Copy contents of `tf_wordir_sample directory/models` from REPO into local `workdir/models`
-3. If step _Prepare Duckietown Dataset_ was not run: Place `dt_mscoco_train.record` and `dt_mscoco_val` into `workdir/data` directory
+### 4. Run Training
+You need to specify the number of training steps and the chosen model for the training.
 
-### Run locational weights generator
-Generate locational weights matrix for use in safety-modified loss-function.
-This step is automatically done, when running the training. However, it can also be run separately:
-```
-docker run -u $(id -u):$(id -g) -it -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/locational_weights_gen.sh
-```
-
-### Run locational weights visualizer
-```
-docker run -u $(id -u):$(id -g) -it -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c "launch/locational_weights_viz.sh --image_filename b_BR_doort_frame00328"
-```
-
-### Run
 Run TensorBoard:
 ```
 docker run -u $(id -u):$(id -g) -it -p 6006:6006 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/tensorboard.sh
@@ -81,19 +60,11 @@ Run Training:
 docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=dt_ssd_mobilenet_v2_quantized_320x320_coco -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest
 ```
 
-### Run export of inference graph
-```
-docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=dt_ssd_mobilenet_v2_quantized_320x320_coco -e CHECKPOINT_NUMBER=0 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/inference_graph_export.sh
-```
+### 5. Run export of Edge-TPU inference graph
+After the training finished, choose the checkpoint, you want to use for exporting the inference graph.
 
-### Run export of Edge-TPU inference graph
 ```
 docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=dt_ssd_mobilenet_v2_quantized_320x320_coco -e CHECKPOINT_NUMBER=0 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/inference_graph_edgetpu_export.sh
-```
-
-### Run container interactively
-```
-docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest /bin/bash
 ```
 
 ## Instructions for running training on IDSC RUDOLF
@@ -183,6 +154,46 @@ docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=dt_ssd_mobilenet_v2_quantized_
 Copy back checkpoints and training results to your local computer. This step might take a while.
 ```
 scp -r lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/workdir/ YOUR_LOCAL_WORKDIR/
+```
+
+## General Instructions
+### Run locational weights generator
+Generate locational weights matrix for use in safety-modified loss-function.
+This step is automatically done, when running the training. However, it can also be run separately:
+```
+docker run -u $(id -u):$(id -g) -it -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/locational_weights_gen.sh
+```
+
+### Run locational weights visualizer
+Visualize the locational weights on a test image. The test image needs to be placed in `workdir/raw_data/images/`
+```
+docker run -u $(id -u):$(id -g) -it -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c "launch/locational_weights_viz.sh --image_filename b_BR_doort_frame00328"
+```
+
+### Run container interactively
+```
+docker run -it -p 8888:8888 -p 6006:6006 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest /bin/bash
+```
+
+### Run export of inference graph
+```
+docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=dt_ssd_mobilenet_v2_quantized_320x320_coco -e CHECKPOINT_NUMBER=0 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/inference_graph_export.sh
+```
+
+### Use of screens
+Screen can be used to manage multiple terminal sessions and detach them in order that the training keeps running:
+https://kb.iu.edu/d/acuy
+```
+# start screen
+screen
+# create window
+Ctrl-a c
+# detach screen
+Ctrl-a d
+# resume screen
+screen -r
+# exit window
+exit
 ```
 
 ## Configurations
