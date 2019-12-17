@@ -117,7 +117,7 @@ class Detector(DTROS):
         BC_pixel.u = self.camera_info.width / 2.0
         BC_pixel.v = self.camera_info.height
         BC_ground = self.pixel2ground(BC_pixel)
-        origin_r = BC_ground['x']
+        origin_r = BC_ground.x
         rospy.loginfo('setted mu of weight r to: ' + str(origin_r) + 'm')
 
         self.threshold_emergency_stop_r = origin_r + 1.5 * self.d_brake
