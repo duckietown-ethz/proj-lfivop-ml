@@ -6,5 +6,5 @@ ssd_mobilenet_v2_quantized_300x300_coco/model.ckpt.data-00000-of-00001 filter=lf
 ssdlite_mobilenet_v2_coco/model.ckpt.data-00000-of-00001 filter=lfs diff=lfs merge=lfs -text
 dt_ssd_mobilenet_v2_coco/model.ckpt.meta filter=lfs diff=lfs merge=lfs -text
 dt_ssd_mobilenet_v2_coco/model.ckpt.data-00000-of-00001 filter=lfs diff=lfs merge=lfs -text
-dt_ssd_mobilenet_v2_quantized_320x320_coco/model.ckpt-50000.meta filter=lfs diff=lfs merge=lfs -text
-dt_ssd_mobilenet_v2_quantized_320x320_coco/model.ckpt-50000.data-00000-of-00001 filter=lfs diff=lfs merge=lfs -text
+dt_ssd_mobilenet_v2_quantized_320x320_coco/model.ckpt.meta filter=lfs diff=lfs merge=lfs -text
+dt_ssd_mobilenet_v2_quantized_320x320_coco/model.ckpt.data-00000-of-00001 filter=lfs diff=lfs merge=lfs -text
