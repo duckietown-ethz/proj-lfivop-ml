@@ -217,9 +217,9 @@ Structure of working directory which must be attached as volume to container.
 
 >Symptom: While running training, the terminal outputs plenty of warnings, but doesn't get killed.
 
-**Resolution**: We are using _TensorFlow 1.15_ with `models/research/object_detection` to train the object detection 
-model in Duckietown. Although _TensorFlow 2.0_ was released in October 2019, `models/research/object_detection` has not
-been adapted yet for _TensorFlow 2.0_. This is why, TensorFlow displays many _deprecated_ warnings while running the training,
+**Resolution**: We are using TensorFlow 1.15 with `models/research/object_detection` to train the object detection 
+model in Duckietown. Although TensorFlow 2.0 was released in October 2019, `models/research/object_detection` has not
+been adapted yet for TensorFlow 2.0. This is why, TensorFlow displays many _deprecated_ warnings while running the training,
 which disappointingly cannot be turned-off.
 
 >Symptom: TensorBoard doesn't show any results even though the training is running.
