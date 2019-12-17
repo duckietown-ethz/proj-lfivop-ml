@@ -89,13 +89,13 @@ class Detector(DTROS):
 
         # load camera info
         self.pcm_ = PinholeCameraModel()
-        camera_info = self.load_camera_info()
-        self.pcm_.width = camera_info.width
-        self.pcm_.height = camera_info.height
-        self.pcm_.K = camera_info.K
-        self.pcm_.D = camera_info.D
-        self.pcm_.R = camera_info.R
-        self.pcm_.P = camera_info.P
+        self.camera_info = self.load_camera_info()
+        self.pcm_.width = self.camera_info.width
+        self.pcm_.height = self.camera_info.height
+        self.pcm_.K = self.camera_info.K
+        self.pcm_.D = self.camera_info.D
+        self.pcm_.R = self.camera_info.R
+        self.pcm_.P = self.camera_info.P
 
         # Load homography
         self.H = self.load_homography()
