@@ -1,0 +1,9 @@
+baseline: 0.1
+calibration_time: 2019-12-11-14-23-37
+gain: 0.5
+k: 27.0
+limit: 1.0
+omega_max: 8.0
+radius: 0.0318
+trim: -0.02
+v_max: 1.0
