@@ -87,7 +87,9 @@ class Detector(DTROS):
                                           queue_size=1)
 
         # our object detection works with raw, non-rectified images
-        self.rectified_input = False
+        # however there appears to be some problems with rectifying points back and forth
+        # --> we assume rectified images for the moment
+        self.rectified_input = True
 
         # load camera info
         self.pcm_ = PinholeCameraModel()
