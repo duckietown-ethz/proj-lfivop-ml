@@ -207,3 +207,38 @@ Structure of working directory which must be attached as volume to container.
         + train
         + eval
 ```
+
+## Troubleshooting and Tips 
+
+
+>Symptom: While trying to run a Docker container on IDSC Rudolf, it displays permission errors.
+
+**Resolution**: Make sure that your IDSC Rudolf user account was added to the Docker group
+
+>Symptom: While running training, the terminal outputs plenty of warnings, but doesn't get killed.
+
+**Resolution**: We are using _TensorFlow 1.15_ with `models/research/object_detection` to train the object detection 
+model in Duckietown. Although _TensorFlow 2.0_ was released in October 2019, `models/research/object_detection` has not
+been adapted yet for _TensorFlow 2.0_. This is why, TensorFlow displays many _deprecated_ warnings while running the training,
+which disappointingly cannot be turned-off.
+
+>Symptom: TensorBoard doesn't show any results even though the training is running.
+
+**Resolution**: TensorBoard shows gradually more and more data. First it will show the model graph, 
+and later after the first evaluation (about 10-20 min) also images which compare the ground-truth to the inference 
+on the validation data set. After about 2000-3000 steps, TensorBoard will also show the coco metrics graphs (mAP etc.).
+If TensorBoard after 10-20 min still doesn't show any data, probably a different model and / or working directory 
+was specified for the training and the TensorBoard container instance.
+
+>Symptom: The coco training metrics (mAP, classification loss) are staying stagnant or even getting worse after a 
+>certain number of training steps
+
+**Resolution**: Because of the relatively low number of images in the training set, the training is prone to overfit the data.
+This results in a worse performance while evaluating the model on the validation set. You might want to try the following approaches:
+1. Increase size of raw data set by adding more annotated images and image sequences
+2. Increase the use of data augmentation by changing its configuration in `pipeline.conf` in the appropriate model directory
+3. Increase weight of regularization loss in `pipeline.conf`
+4. Experiment with the use and timing of quantization, which increases overfitting in some situations
+
+
+
