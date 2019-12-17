@@ -116,12 +116,15 @@ class Detector(DTROS):
         BC_pixel = Pixel()
         BC_pixel.u = self.camera_info.width / 2.0
         BC_pixel.v = self.camera_info.height
-        BC_ground = self.pixel2ground(BC_pixel)
+        BC_pixel_scaled = self.scale_pixel(BC_pixel)
+        BC_ground = self.pixel2ground(BC_pixel_scaled)
         origin_r = BC_ground.x
-        rospy.loginfo('setted mu of weight r to: ' + str(origin_r) + 'm')
+        rospy.loginfo('set radial origin to: ' + str(origin_r) + 'm')
 
         self.threshold_emergency_stop_r = origin_r + 1.5 * self.d_brake
+        rospy.loginfo('set threshold_emergency_stop_r: ' + str(self.threshold_emergency_stop_r) + 'm')
         self.threshold_emergency_stop_phi = 60 / 180 * math.pi  # [rad]
+        rospy.loginfo('set threshold_emergency_stop_phi: ' + str(self.threshold_emergency_stop_phi) + 'rad')
 
     def callback(self, data):
         # Convert compressed image to BGR
@@ -212,9 +215,7 @@ class Detector(DTROS):
         pixel.v = max(prediction['startY'], prediction['endY'])
 
         # scale back to original camera image size
-        pixel_scaled = Pixel()
-        pixel_scaled.u = int(pixel.u * self.pcm_.width / float(self.res_w))
-        pixel_scaled.v = int(pixel.v * self.pcm_.height / float(self.res_h))
+        pixel_scaled = self.scale_pixel(pixel)
 
         # prediction certainty should be higher than 60% for emergency stop
         if prediction['score'] > 0.60:
@@ -439,6 +440,13 @@ class Detector(DTROS):
         rospy.loginfo('Horizon is at v: ' + str(pixel.v) + 'px')
 
         return pixel.v
+
+    def scale_pixel(self, pixel):
+        # scale back to original camera image size
+        pixel_scaled = Pixel()
+        pixel_scaled.u = int(pixel.u * self.pcm_.width / float(self.res_w))
+        pixel_scaled.v = int(pixel.v * self.pcm_.height / float(self.res_h))
+        return pixel_scaled
 
     def onShutdown(self):
         """Shutdown procedure.
