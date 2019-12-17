@@ -78,17 +78,17 @@ Access TensorBoard: http://localhost:6006/
 
 Run Training:
 ```
-docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest
+docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=dt_ssd_mobilenet_v2_quantized_320x320_coco -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest
 ```
 
 ### Run export of inference graph
 ```
-docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CHECKPOINT_NUMBER=0 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/inference_graph_export.sh
+docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=dt_ssd_mobilenet_v2_quantized_320x320_coco -e CHECKPOINT_NUMBER=0 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/inference_graph_export.sh
 ```
 
 ### Run export of Edge-TPU inference graph
 ```
-docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CHECKPOINT_NUMBER=0 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/inference_graph_edgetpu_export.sh
+docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=dt_ssd_mobilenet_v2_quantized_320x320_coco -e CHECKPOINT_NUMBER=0 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest bash -c launch/inference_graph_edgetpu_export.sh
 ```
 
 ### Run container interactively
@@ -168,7 +168,7 @@ docker pull mstoelzle/dt-object-detection-training:latest-gpu
 ### Run Training
 Run TensorBoard:
 ```
-docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu bash -c launch/tensorboard.sh
+docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=dt_ssd_mobilenet_v2_quantized_320x320_coco -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu bash -c launch/tensorboard.sh
 ```
 
 Access TensorBoard: http://localhost:6067/
@@ -176,7 +176,7 @@ Access TensorBoard: http://localhost:6067/
 Run Training:
 
 ```
-docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=ssd_mobilenet_v2_quantized_300x300_coco -e CUDA_VISIBLE_DEVICES=2 -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu
+docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=dt_ssd_mobilenet_v2_quantized_320x320_coco -e CUDA_VISIBLE_DEVICES=2 -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu
 ```
 
 ### Copy WORKDIR from IDSC Rudolf to local computer
@@ -185,7 +185,8 @@ Copy back checkpoints and training results to your local computer. This step mig
 scp -r lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/workdir/ YOUR_LOCAL_WORKDIR/
 ```
 
-## Config Working directory
+## Configurations
+### Working directory
 Structure of working directory which must be attached as volume to container.
 
 `+` describes a directory and `-` a file
@@ -207,6 +208,17 @@ Structure of working directory which must be attached as volume to container.
         + train
         + eval
 ```
+### Environment Variables for Docker container
+| environment variable  | default | description | 
+| ------------- | ------------- |  ------------- | 
+| MODEL_NAME | dt_ssd_mobilenet_v2_coco | Name of the model directory in `workdir/models` which is used for training and inference graph generation  |
+| TB_PORT | 6006 | Specifies the port where the TensorBoard is published (inside container) |
+| CUDA_VISIBLE_DEVICES | 1 | The number of GPUs the TensorFlow will use during training on IDSC Rudolf |
+| NUM_TRAIN_STEPS | 50000 | The number of training steps before TensorFlow stops the training. |
+| CHECKPOINT_NUMBER | 0 | Specifies the training checkpoint, which should be used to export the inference graph (for example 50000) |
+| VAL_1_OF_N_IMAGES | 10 | Specifies the split of the validation set. 1 of every N images are assigned to the validation set. VAL_1_OF_N_IMAGES specifies N. |
+| TEST_1_OF_N_IMAGES | 10 | Specifies the split of the test set. 1 of every N images are assigned to the test set. TEST_1_OF_N_IMAGES specifies N. |
+| DUCKIEBOT_CALIBRATION_HOSTNAME | default | Specifies the hostname of the Duckiebot used to export the intrinsic and extrinsic camera calibration files to generate locational weights |
 
 ## Troubleshooting and Tips 
 

@@ -29,7 +29,7 @@ RUN ${PIP} install "tensorboard"${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
 ARG REPO_NAME="dt-object-detection-training"
 ENV REPO_PATH="/src/${REPO_NAME}"
 
-ENV MODEL_NAME="ssdlite_mobilenet_v2_coco"
+ENV MODEL_NAME="dt_ssd_mobilenet_v2_coco"
 
 # create repo directory
 RUN mkdir -p "${REPO_PATH}"
