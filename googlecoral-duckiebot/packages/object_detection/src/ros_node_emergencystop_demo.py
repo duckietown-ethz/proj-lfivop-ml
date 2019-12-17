@@ -108,14 +108,14 @@ class Detector(DTROS):
 
         # define parameters for emergency stop
         self.a_brake_max = 0.2 * 9.81  # m/s^2 --> 0.2*g
-        self.v_max = 1  # m/s
-        self.d_brake = 1 / 2 * self.v_max ** 2 / self.a_brake_max
+        self.v_max = 1.0  # m/s
+        self.d_brake = float(1.0 / 2.0 * self.v_max ** 2 / self.a_brake_max)
         rospy.loginfo("Calculated a braking distance of d_brake: " + str(self.d_brake) + "m")
 
         # Bottom center point
         BC_pixel = Pixel()
-        BC_pixel.u = self.camera_info['width'] / 2
-        BC_pixel.v = self.camera_info['height']
+        BC_pixel.u = self.camera_info.width / 2.0
+        BC_pixel.v = self.camera_info.height
         BC_ground = self.pixel2ground(BC_pixel)
         origin_r = BC_ground['x']
         rospy.loginfo('setted mu of weight r to: ' + str(origin_r) + 'm')
@@ -213,8 +213,8 @@ class Detector(DTROS):
 
         # scale back to original camera image size
         pixel_scaled = Pixel()
-        pixel_scaled.u = int(pixel.u * self.pcm_.width / self.res_w)
-        pixel_scaled.v = int(pixel.v * self.pcm_.height / self.res_h)
+        pixel_scaled.u = int(pixel.u * self.pcm_.width / float(self.res_w))
+        pixel_scaled.v = int(pixel.v * self.pcm_.height / float(self.res_h))
 
         # prediction certainty should be higher than 60% for emergency stop
         if prediction['score'] > 0.60:
