@@ -25,7 +25,7 @@ Building the image for the first time can take up to 30 minutes.
 ### 3. Make sure you have plugged in Google Coral USB Accelerator to Duckiebot, then run docker image with the following options
  
 ```bash
-docker -H [ROBOT_NAME].local run -it --rm --net=host -v /dev/bus/usb:/dev/bus/usb -e model_name=MODEL_NAME --privileged duckietown/googlecoral-duckiebot:v1-arm32v7
+docker -H [ROBOT_NAME].local run -it --rm --net=host -v /dev/bus/usb:/dev/bus/usb -e model_name=MODEL_NAME --privileged duckietown/proj-lfivop-ml:master-arm32v7
 ```
 If no model is specified, it will be set to "class_localization". Model name choices are:
 
@@ -59,7 +59,7 @@ Image stream with bounding boxes, scores, and lables is then published to topic:
 ### 1. Make sure you have plugged in Google Coral USB Accelerator to Duckiebot, then run docker image with the following options
 
 ```bash
-docker -H [ROBOT_NAME].local run -it --rm --net=host -v /dev/bus/usb:/dev/bus/usb -v /data:/data -e model_name=MODEL_NAME --privileged duckietown/googlecoral-duckiebot:v1-arm32v7 bash -c packages/launch_emergencystop_demo/emergencystop_demo.sh
+docker -H [ROBOT_NAME].local run -it --rm --net=host -v /dev/bus/usb:/dev/bus/usb -v /data:/data -e model_name=MODEL_NAME --privileged duckietown/proj-lfivop-ml:master-arm32v7 bash -c packages/launch_emergencystop_demo/emergencystop_demo.sh
 ```
 Your duckiebot will move in a straight line. It will stop when detect Duckie or Duckiebot close upfront with confidence level more than 60%.
 
