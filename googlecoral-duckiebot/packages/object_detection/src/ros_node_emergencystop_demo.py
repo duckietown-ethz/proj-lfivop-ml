@@ -123,7 +123,7 @@ class Detector(DTROS):
         origin_r = BC_ground.x
         rospy.loginfo('set radial origin to: ' + str(origin_r) + 'm')
 
-        self.threshold_emergency_stop_r = origin_r + 4 * self.d_brake
+        self.threshold_emergency_stop_r = origin_r + 2.5 * self.d_brake
         rospy.loginfo('set threshold_emergency_stop_r: ' + str(self.threshold_emergency_stop_r) + 'm')
         self.threshold_emergency_stop_phi = float(60 / 180.0 * math.pi)  # [rad]
         rospy.loginfo('set threshold_emergency_stop_phi: ' + str(self.threshold_emergency_stop_phi) + 'rad')
