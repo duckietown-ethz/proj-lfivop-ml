@@ -107,19 +107,19 @@ docker pull mstoelzle/dt-object-detection-training:latest-gpu
 ```
 
 ### 5. Run Training
-*Start screen:*
+**Start screen:**
 ```
 screen
 ```
 
-*Run TensorBoard:*
+**Run TensorBoard:**
 ```
 docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=dt_ssd_mobilenet_v2_quantized_320x320_coco -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu bash -c launch/tensorboard.sh
 ```
 
 Access TensorBoard: http://localhost:6067/
 
-*Run Training:*
+**Run Training:**
 
 Open new screen window with `Ctrl-a c`
 
@@ -127,11 +127,10 @@ Open new screen window with `Ctrl-a c`
 docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=dt_ssd_mobilenet_v2_quantized_320x320_coco -e CUDA_VISIBLE_DEVICES=2 -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu
 ```
 
-*Detach Screen:*
+**Detach Screen:**
+
 Detach screen with `Ctrl-a d`.
 This will ensure, that the training keeps running, even if your SSH tunnel is closed
-
-
 
 ### 6. Run export of Edge-TPU inference graph
 After the training finished, choose the checkpoint, you want to use for exporting the inference graph.
@@ -150,7 +149,10 @@ scp -r lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/workdir/ YOUR_LOCAL_WORKDIR
 1. Stop all windows:
     1. Resume the screen session using `screen -r`
     2. Then cycle through all the windows (`Ctrl-a n`) and exit the window (`exit`) which will stop all running processes in the window
-2. Clean up IDSC Rudolf by stopping all running containers (`docker ps` to find the container ids and `docker stop container_id` to stop the container) and removing the working directory with `rm -r`
+2. Stopping all remaining running Docker containers
+    1. `docker ps` to find the container ids 
+    2. `docker stop container_id` to stop the container
+3. Remove the working directory with `rm -r workdir`
 
 ## General Instructions
 ### Run locational weights generator
