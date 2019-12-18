@@ -123,7 +123,7 @@ class Detector(DTROS):
         origin_r = BC_ground.x
         rospy.loginfo('set radial origin to: ' + str(origin_r) + 'm')
 
-        self.threshold_emergency_stop_r = origin_r + 1.5 * self.d_brake
+        self.threshold_emergency_stop_r = origin_r + 2.5 * self.d_brake
         rospy.loginfo('set threshold_emergency_stop_r: ' + str(self.threshold_emergency_stop_r) + 'm')
         self.threshold_emergency_stop_phi = float(60 / 180.0 * math.pi)  # [rad]
         rospy.loginfo('set threshold_emergency_stop_phi: ' + str(self.threshold_emergency_stop_phi) + 'rad')
@@ -231,20 +231,20 @@ class Detector(DTROS):
                     # option 1: ground projection and decision with cylindrical coordinates
                     # only project to ground, if pixel below horizon
                     # scale back to original camera image size
-                    pixel_scaled = self.scale_pixel(pixel)
-                    if pixel_scaled.v > self.horizon:
-                        ground_point = self.pixel2ground(pixel)
-                        cylinder_point = self.ground2cylinder(ground_point)
-                        rospy.loginfo('Detected safety-critical object has r=' + str(cylinder_point['r']))
-                        # rospy.loginfo('Detected safety-critical object has phi=' + str(cylinder_point['phi']))
-
-                        if cylinder_point['r'] < self.threshold_emergency_stop_r:
-                            emergency_stop = True
+                    # pixel_scaled = self.scale_pixel(pixel)
+                    # if pixel_scaled.v > self.horizon:
+                    #     ground_point = self.pixel2ground(pixel)
+                    #     cylinder_point = self.ground2cylinder(ground_point)
+                    #     rospy.loginfo('Detected safety-critical object has r=' + str(cylinder_point['r']))
+                    #     # rospy.loginfo('Detected safety-critical object has phi=' + str(cylinder_point['phi']))
+                    #
+                    #     if cylinder_point['r'] < self.threshold_emergency_stop_r:
+                    #         emergency_stop = True
 
                     # option 2: simply box within image
                     # activate emergency stop if object is in horizontal center half and in lower quarter of image
-                    # if pixel.v >= 2/3.0*self.res_h and 1 / 4.0 * self.res_w <= pixel.u <= 3 / 4.0 * self.res_w:
-                    #     emergency_stop = True
+                    if pixel.v >= 2/3.0*self.res_h and 1 / 4.0 * self.res_w <= pixel.u <= 3 / 4.0 * self.res_w:
+                        emergency_stop = True
 
         if emergency_stop:
             emergency_stop_vote = min(30, self.emergency_stop_vote + 1)
