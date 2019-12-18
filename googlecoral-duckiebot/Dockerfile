@@ -62,6 +62,9 @@ RUN git clone https://github.com/google-coral/tflite.git
 # install python dependencies
 # RUN pip install -r ${REPO_PATH}/dependencies-py.txt
 
+RUN apt-get update
+RUN apt-get install -y ros-kinetic-image-geometry
+
 # copy the source code
 COPY . "${REPO_PATH}/"
 
