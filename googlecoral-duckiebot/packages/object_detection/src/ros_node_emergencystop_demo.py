@@ -125,7 +125,7 @@ class Detector(DTROS):
 
         self.threshold_emergency_stop_r = origin_r + 1.5 * self.d_brake
         rospy.loginfo('set threshold_emergency_stop_r: ' + str(self.threshold_emergency_stop_r) + 'm')
-        self.threshold_emergency_stop_phi = 60 / 180 * math.pi  # [rad]
+        self.threshold_emergency_stop_phi = float(60 / 180.0 * math.pi)  # [rad]
         rospy.loginfo('set threshold_emergency_stop_phi: ' + str(self.threshold_emergency_stop_phi) + 'rad')
 
     def callback(self, data):
