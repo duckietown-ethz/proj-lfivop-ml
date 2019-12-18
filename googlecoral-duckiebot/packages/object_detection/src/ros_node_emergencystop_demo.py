@@ -166,6 +166,7 @@ class Detector(DTROS):
                     self.pub_wheels.publish(self.msg_wheels_cmd)
 
         except Exception as e:
+            rospy.logerr("Exceptions: "+str(e))
             correction_constant = 100 / 3
             vel_left, vel_right = self.speedToCmd(0.15 * correction_constant, 0.15 * correction_constant)
             self.msg_wheels_cmd.vel_left = vel_left
