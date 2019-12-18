@@ -147,14 +147,14 @@ class Detector(DTROS):
                 self.fps = str(prediction['FPS'])
                 self.draw_prediction(orig, prediction)
 
-            if self.frame_counter < 8:
+            if self.frame_counter < 2:
                 self.frame_counter += 1
             else:
                 self.frame_counter = 0
             if self.objdet_emergency_stop is True and self.frame_counter == 0:
                 self.emergency_stop_vote = self.assess_emergency_stop(predictions)
                 # we only activate the emergency stop, if numerous frames voted for it
-                if self.emergency_stop_vote > 3:
+                if self.emergency_stop_vote > 10:
                     self.msg_wheels_cmd.vel_left = 0
                     self.msg_wheels_cmd.vel_right = 0
                     self.pub_wheels.publish(self.msg_wheels_cmd)
@@ -221,30 +221,27 @@ class Detector(DTROS):
             pixel.u = int((prediction['startX'] + prediction['endX']) / 2)
             pixel.v = max(prediction['startY'], prediction['endY'])
 
-            # scale back to original camera image size
-            pixel_scaled = self.scale_pixel(pixel)
-
-            # prediction certainty should be higher than 60% for emergency stop
-            if prediction['score'] > 0.60:
+            # prediction certainty should be higher than 75% for emergency stop
+            if prediction['score'] > 0.75:
                 # activate emergency stop if object is Duckie or Duckiebot
                 if prediction['label'] == 'Duckie' or prediction['label'] == 'Duckiebot':
+                    # scale back to original camera image size
+                    # pixel_scaled = self.scale_pixel(pixel)
                     # only project to ground, if pixel below horizon
-                    if pixel_scaled.v > self.horizon:
-                        ground_point = self.pixel2ground(pixel)
-                        cylinder_point = self.ground2cylinder(ground_point)
-                        rospy.loginfo('Detected safety-critical object has r='+str(cylinder_point['r']))
-                        rospy.loginfo('Detected safety-critical object has phi='+str(cylinder_point['phi']))
-
-                        if cylinder_point['r'] < self.threshold_emergency_stop_r \
-                                and abs(cylinder_point['phi']) < self.threshold_emergency_stop_phi:
-                            emergency_stop = True
+                    # if pixel_scaled.v > self.horizon:
+                    #     ground_point = self.pixel2ground(pixel)
+                    #     cylinder_point = self.ground2cylinder(ground_point)
+                    #
+                    #     if cylinder_point['r'] < self.threshold_emergency_stop_r \
+                    #             and abs(cylinder_point['phi']) < self.threshold_emergency_stop_phi:
+                    #         emergency_stop = True
 
                     # activate emergency stop if object is in horizontal center half and in lower quarter of image
-                    # if pixel.v >= 2/3.0*self.res_h and 1 / 4.0 * self.res_w <= pixel.u <= 3 / 4.0 * self.res_w:
-                    #     emergency_stop = True
+                    if pixel.v >= 2/3.0*self.res_h and 1 / 4.0 * self.res_w <= pixel.u <= 3 / 4.0 * self.res_w:
+                        emergency_stop = True
 
         if emergency_stop:
-            emergency_stop_vote = min(10, self.emergency_stop_vote+1)
+            emergency_stop_vote = min(30, self.emergency_stop_vote+1)
         else:
             emergency_stop_vote = max(0, self.emergency_stop_vote-1)
 
