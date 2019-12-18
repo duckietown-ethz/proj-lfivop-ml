@@ -228,20 +228,20 @@ class Detector(DTROS):
             if prediction['score'] > 0.75:
                 # activate emergency stop if object is Duckie or Duckiebot
                 if prediction['label'] == 'Duckie' or prediction['label'] == 'Duckiebot':
-                    # scale back to original camera image size
-                    # pixel_scaled = self.scale_pixel(pixel)
                     # only project to ground, if pixel below horizon
-                    # if pixel_scaled.v > self.horizon:
-                    #     ground_point = self.pixel2ground(pixel)
-                    #     cylinder_point = self.ground2cylinder(ground_point)
-                    #
-                    #     if cylinder_point['r'] < self.threshold_emergency_stop_r \
-                    #             and abs(cylinder_point['phi']) < self.threshold_emergency_stop_phi:
-                    #         emergency_stop = True
+                    # scale back to original camera image size
+                    pixel_scaled = self.scale_pixel(pixel)
+                    if pixel_scaled.v > self.horizon:
+                        ground_point = self.pixel2ground(pixel)
+                        cylinder_point = self.ground2cylinder(ground_point)
+
+                        if cylinder_point['r'] < self.threshold_emergency_stop_r \
+                                and abs(cylinder_point['phi']) < self.threshold_emergency_stop_phi:
+                            emergency_stop = True
 
                     # activate emergency stop if object is in horizontal center half and in lower quarter of image
-                    if pixel.v >= 2/3.0*self.res_h and 1 / 4.0 * self.res_w <= pixel.u <= 3 / 4.0 * self.res_w:
-                        emergency_stop = True
+                    # if pixel.v >= 2/3.0*self.res_h and 1 / 4.0 * self.res_w <= pixel.u <= 3 / 4.0 * self.res_w:
+                    #     emergency_stop = True
 
         if emergency_stop:
             emergency_stop_vote = min(30, self.emergency_stop_vote+1)
