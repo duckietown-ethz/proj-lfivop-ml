@@ -195,6 +195,42 @@ exit
 ```
 
 ## Configurations
+
+### Included models
+**dt_ssd_mobilenet_v2_coco**
+
+The model.ckpt checkpoint was pre-trained on the Coco dataset and is used to fine-tune the neural neural network on initialization. 
+This model is not _quantized_. 
+
+Additional data augmentation (compared to the standard model) as for example 
+- random_image_scale [0.75, 1.25]
+- random_adjust_brightness [1.20]
+- random_adjust_contrast [0.80, 1.25]
+- random_adjust_saturation [0.80, 1.25]
+
+was added the the pipeline configuration.
+
+**dt_ssd_mobilenet_v2_quantized_320x320_coco**
+
+The model.ckpt checkpoint was pre-trained on the Coco dataset and then (using dt_ssd_mobilenet_v2_coco and additional data augmentation) for 50000 steps on the Duckietown dataset.
+It is used to fine-tune the neural neural network on initialization and reduce the convergence time while training with quantization. 
+
+The pre-trained model is not quantized yet, however this model will quantize during training with a delay of 48000, 8 weight bits and 8 activation bits. 
+
+Additional data augmentation (compared to the standard model) as for example 
+- random_image_scale [0.75, 1.25]
+- random_adjust_brightness [1.20]
+- random_adjust_contrast [0.80, 1.25]
+- random_adjust_saturation [0.80, 1.25]
+
+was added the the pipeline configuration.
+
+Compared to the standard *dt_ssd_mobilenet_v2_coco* model, the following changes were introduced:
+- the image_resizer is adapted to 320x320 pixels
+- the batch size was reduced to 12 (otherwise memory issues on IDSC Rudolf)
+- `load_all_detection_checkpoint_vars` was set to `true` to speed up training
+- graph rewriter was added for quantization
+
 ### Working directory
 Structure of working directory which must be attached as volume to container.
 
