@@ -154,7 +154,7 @@ class Detector(DTROS):
                 self.frame_counter = 0
             if self.objdet_emergency_stop is True and self.frame_counter == 0:
                 self.emergency_stop_vote = self.assess_emergency_stop(predictions)
-                rospy.loginfo("Emergency stop vote count: "+str(self.emergency_stop_vote))
+                rospy.loginfo("Emergency stop vote count: " + str(self.emergency_stop_vote))
                 # we only activate the emergency stop, if numerous frames voted for it
                 if self.emergency_stop_vote > 10:
                     self.msg_wheels_cmd.vel_left = 0
@@ -168,7 +168,7 @@ class Detector(DTROS):
                     self.pub_wheels.publish(self.msg_wheels_cmd)
 
         except Exception as e:
-            rospy.logerr("Exceptions: "+str(e))
+            rospy.logerr("Exceptions: " + str(e))
             correction_constant = 100 / 3
             vel_left, vel_right = self.speedToCmd(0.15 * correction_constant, 0.15 * correction_constant)
             self.msg_wheels_cmd.vel_left = vel_left
@@ -235,10 +235,10 @@ class Detector(DTROS):
                     if pixel_scaled.v > self.horizon:
                         ground_point = self.pixel2ground(pixel)
                         cylinder_point = self.ground2cylinder(ground_point)
-                        rospy.loginfo('Detected safety-critical object has r='+str(cylinder_point['r']))
-                        rospy.loginfo('Detected safety-critical object has phi='+str(cylinder_point['phi']))
+                        rospy.loginfo('Detected safety-critical object has r=' + str(cylinder_point['r']))
+                        rospy.loginfo('Detected safety-critical object has phi=' + str(cylinder_point['phi']))
 
-                    if cylinder_point['r'] < self.threshold_emergency_stop_r \
+                        if cylinder_point['r'] < self.threshold_emergency_stop_r \
                                 and abs(cylinder_point['phi']) < self.threshold_emergency_stop_phi:
                             emergency_stop = True
 
@@ -247,9 +247,9 @@ class Detector(DTROS):
                     #     emergency_stop = True
 
         if emergency_stop:
-            emergency_stop_vote = min(30, self.emergency_stop_vote+1)
+            emergency_stop_vote = min(30, self.emergency_stop_vote + 1)
         else:
-            emergency_stop_vote = max(0, self.emergency_stop_vote-1)
+            emergency_stop_vote = max(0, self.emergency_stop_vote - 1)
 
         return emergency_stop_vote
 
