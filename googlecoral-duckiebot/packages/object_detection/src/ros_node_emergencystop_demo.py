@@ -153,6 +153,7 @@ class Detector(DTROS):
                 self.frame_counter = 0
             if self.objdet_emergency_stop is True and self.frame_counter == 0:
                 self.emergency_stop_vote = self.assess_emergency_stop(predictions)
+                rospy.loginfo("Emergency stop vote count: "+str(self.emergency_stop_vote))
                 # we only activate the emergency stop, if numerous frames voted for it
                 if self.emergency_stop_vote > 10:
                     self.msg_wheels_cmd.vel_left = 0
