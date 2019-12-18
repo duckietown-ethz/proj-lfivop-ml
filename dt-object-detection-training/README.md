@@ -69,29 +69,16 @@ docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=dt_ssd_mobilenet_v2_quantized_
 
 ## Instructions for running training on IDSC RUDOLF
 ### Pre-flight checklist
-Before you try to run a training for duckietown object detection training on IDSC Rudolf, make sure you have prepared the following things:
+Before you try to run a training for duckietown object detection on your IDSC Rudolf, make sure you have prepared the following things:
 1. Granted IDSC Rudolf account with Docker privileges
 2. Pushed the `proj-lfivop-ml` repository to Github. _Github Actions_ will automatically build the docker container (both CPU and GPU versions) and push them to Docker Hub (_mstoelzle_ account)
-3. Prepare working directory
-4. Choose (pre-trained) model which you want to use for training. The model needs to be quantized in order for the inference to work on the Edge-TPU. Recommended is using the pre-trained `ssd_mobilenet_v2_quantized_300x300_coco` model
-5. Copy working directory to IDSC Rudolf using `scp`
-6. Run the following commands from the `proj-lfivop-ml/dt-object-detection-training` directory:
-    1. Run Dataset preparation command in the Docker container (`bash -c launch/dataset_preparation.sh`)
-    2. SSH into IDSC Rudolf while sharing the port 6067 with your local computer, in order that you can access TensorBoard in your browser
-    3. Pull the recent Docker image from Docker Hub
-    4. Start screen with `screen`
-    5. Run TensorBoard command in the Docker container (`bash -c launch/tensorboard.sh`)
-    6. Open new window in screen with `Ctrl-a c`
-    7. Run Training command in the Docker container (`bash -c launch/training.sh`) while specifying number of training steps and the chosen model
-    8. Detach screen with `Ctrl-a d`. This will ensure, that the training keeps running, even if your SSH tunnel is closed
-    9. Monitor training progress on TensorBoard
-    10. After the training finished, choose the checkpoint, you want to use for exporting the inference graph
-    11. Run the Edge-TPU inference graph export command in the Docker container: (`bash -c launch/inference_graph_edgetpu_export.sh`) while specifying the checkpoint number
-    12. Resume the screen session using `screen -r`, then cycle through all the windows (`Ctrl-a n`) and exit the window (`exit`) which will stop all running processes in the window
-    13. Clean up IDSC Rudolf by stopping all running containers (`docker ps` to find the container ids and `docker stop container_id` to stop the container) and removing the working directory with `rm -r`
-7. Copy the working directory from IDSC Rudolf back to your local computer including all the checkpoints using `scp` (might take a while)
+3. Choose (pre-trained) model which you want to use for training. The model needs to be quantized in order for the inference to work on the Edge-TPU. Recommended is using the pre-trained `ssd_mobilenet_v2_quantized_300x300_coco` model
+4. Prepare workdir directory on your local computer
+5. Run Dataset preparation for your local workdir (see Instructions for localhost)
 
-### Build:
+### 1. Build:
+Run the building commands from within the `proj-lfivop-ml/dt-object-detection-training` directory.
+
 Build on localhost for GPU:
 ```
 docker build --build-arg GPU=-gpu -f ./Dockerfile -t mstoelzle/dt-object-detection-training:latest-gpu .
@@ -101,60 +88,69 @@ Push to Docker Hub:
 ```
 docker push mstoelzle/dt-object-detection-training:latest-gpu
 ```
-
-### SSH into IDSC Rudolf:
-SSH into IDSC Rudolf:
-```
-ssh lfivop-ml@idsc-rudolf.ethz.ch -L 6067:127.0.0.1:6067
-```
-
-### Use of screens on IDSC Rudolf
-Screen can be used to manage multiple terminal sessions and detach them in order that the training keeps running:
-https://kb.iu.edu/d/acuy
-```
-# start screen
-screen
-# create window
-Ctrl-a c
-# detach screen
-Ctrl-a d
-# resume screen
-screen -r
-# exit window
-exit
-```
-
-### Copy WORKDIR to IDSC Rudolf
-Copy the prepared WORKDIR from localhost to RUDOLF:
+### 2. Copy workdir to IDSC Rudolf
+Copy the prepared `workdir` from localhost to RUDOLF:
 
 ```
 scp -r YOUR_LOCAL_WORKDIR/ lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/workdir/
 ```
 
-### Pull Docker Image
+### 3. SSH into IDSC Rudolf:
+SSH into IDSC Rudolf:
+```
+ssh lfivop-ml@idsc-rudolf.ethz.ch -L 6067:127.0.0.1:6067
+```
+
+### 4. Pull Docker Image
 ```
 docker pull mstoelzle/dt-object-detection-training:latest-gpu
 ```
 
-### Run Training
-Run TensorBoard:
+### 5. Run Training
+*Start screen:*
+```
+screen
+```
+
+*Run TensorBoard:*
 ```
 docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=dt_ssd_mobilenet_v2_quantized_320x320_coco -p 6067:6067 -e TB_PORT=6067 -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu bash -c launch/tensorboard.sh
 ```
 
 Access TensorBoard: http://localhost:6067/
 
-Run Training:
+*Run Training:*
+
+Open new screen window with `Ctrl-a c`
 
 ```
 docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=dt_ssd_mobilenet_v2_quantized_320x320_coco -e CUDA_VISIBLE_DEVICES=2 -e NUM_TRAIN_STEPS=50000 -e DUCKIEBOT_CALIBRATION_HOSTNAME=maxicar -v /home/lfivop-ml/workdir:/workdir mstoelzle/dt-object-detection-training:latest-gpu
 ```
 
-### Copy WORKDIR from IDSC Rudolf to local computer
+*Detach Screen:*
+Detach screen with `Ctrl-a d`.
+This will ensure, that the training keeps running, even if your SSH tunnel is closed
+
+
+
+### 6. Run export of Edge-TPU inference graph
+After the training finished, choose the checkpoint, you want to use for exporting the inference graph.
+
+```
+docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=dt_ssd_mobilenet_v2_quantized_320x320_coco -e CHECKPOINT_NUMBER=0 -v YOUR_LOCAL_WORKDIR:/workdir mstoelzle/dt-object-detection-training:latest-gpu bash -c launch/inference_graph_edgetpu_export.sh
+```
+
+### 7. Copy Workdir from IDSC Rudolf to local computer
 Copy back checkpoints and training results to your local computer. This step might take a while.
 ```
 scp -r lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/workdir/ YOUR_LOCAL_WORKDIR/
 ```
+
+### 8. Clean-up on IDSC Rudolf
+1. Stop all windows:
+    1. Resume the screen session using `screen -r`
+    2. Then cycle through all the windows (`Ctrl-a n`) and exit the window (`exit`) which will stop all running processes in the window
+2. Clean up IDSC Rudolf by stopping all running containers (`docker ps` to find the container ids and `docker stop container_id` to stop the container) and removing the working directory with `rm -r`
 
 ## General Instructions
 ### Run locational weights generator
