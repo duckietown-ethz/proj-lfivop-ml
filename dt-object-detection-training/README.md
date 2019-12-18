@@ -13,7 +13,7 @@ Before you try to run a training for duckietown object detection on your localho
 1. Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker](https://docs.docker.com/install/)
 2. Give Docker sufficient resources on your local computer (increase allocated memory and swap-storage), otherwise TensorFlow will kill the training
 3. Clone this repository to your local computer: `git clone https://github.com/duckietown-ethz/proj-lfivop-ml.git`
-4. Choose (pre-trained) model which you want to use for training. The model needs to be quantized in order for the inference to work on the Edge-TPU. Recommended is using the pre-trained `ssd_mobilenet_v2_quantized_300x300_coco` model
+4. Choose (pre-trained) model which you want to use for training. The model needs to be quantized in order for the inference to work on the Edge-TPU. Recommended is using the pre-trained `dt_ssd_mobilenet_v2_quantized_320x320_coco` model
 5. Prepare workdir directory
 
 ### 1. Git submodule initialization
@@ -72,7 +72,7 @@ docker run -u $(id -u):$(id -g) -it -e MODEL_NAME=dt_ssd_mobilenet_v2_quantized_
 Before you try to run a training for duckietown object detection on your IDSC Rudolf, make sure you have prepared the following things:
 1. Granted IDSC Rudolf account with Docker privileges
 2. Pushed the `proj-lfivop-ml` repository to Github. _Github Actions_ will automatically build the docker container (both CPU and GPU versions) and push them to Docker Hub (_mstoelzle_ account)
-3. Choose (pre-trained) model which you want to use for training. The model needs to be quantized in order for the inference to work on the Edge-TPU. Recommended is using the pre-trained `ssd_mobilenet_v2_quantized_300x300_coco` model
+3. Choose (pre-trained) model which you want to use for training. The model needs to be quantized in order for the inference to work on the Edge-TPU. Recommended is using the pre-trained `dt_ssd_mobilenet_v2_quantized_320x320_coco` model
 4. Prepare workdir directory on your local computer
 5. Run Dataset preparation for your local workdir (see Instructions for localhost)
 
