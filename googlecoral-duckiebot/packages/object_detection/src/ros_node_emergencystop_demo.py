@@ -147,14 +147,14 @@ class Detector(DTROS):
                 self.fps = str(prediction['FPS'])
                 self.draw_prediction(orig, prediction)
 
-            if self.frame_counter < 3:
+            if self.frame_counter < 8:
                 self.frame_counter += 1
             else:
                 self.frame_counter = 0
             if self.objdet_emergency_stop is True and self.frame_counter == 0:
                 self.emergency_stop_vote = self.assess_emergency_stop(predictions)
                 # we only activate the emergency stop, if numerous frames voted for it
-                if self.emergency_stop_vote > 10:
+                if self.emergency_stop_vote > 3:
                     self.msg_wheels_cmd.vel_left = 0
                     self.msg_wheels_cmd.vel_right = 0
                     self.pub_wheels.publish(self.msg_wheels_cmd)
@@ -183,8 +183,6 @@ class Detector(DTROS):
         if rospy.is_shutdown():
             self.rate = rospy.Rate(0.1)
 
-            vel_left = 0
-            vel_right = 0
             self.msg_wheels_cmd.vel_left = 0
             self.msg_wheels_cmd.vel_right = 0
             self.pub_wheels.publish(self.msg_wheels_cmd)
@@ -246,7 +244,7 @@ class Detector(DTROS):
                     #     emergency_stop = True
 
         if emergency_stop:
-            emergency_stop_vote = min(30, self.emergency_stop_vote+1)
+            emergency_stop_vote = min(10, self.emergency_stop_vote+1)
         else:
             emergency_stop_vote = max(0, self.emergency_stop_vote-1)
 
