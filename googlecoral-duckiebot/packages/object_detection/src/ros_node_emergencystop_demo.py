@@ -123,7 +123,7 @@ class Detector(DTROS):
         origin_r = BC_ground.x
         rospy.loginfo('set radial origin to: ' + str(origin_r) + 'm')
 
-        self.threshold_emergency_stop_r = origin_r + 10 * self.d_brake
+        self.threshold_emergency_stop_r = origin_r + 6 * self.d_brake
         rospy.loginfo('set threshold_emergency_stop_r: ' + str(self.threshold_emergency_stop_r) + 'm')
         self.threshold_emergency_stop_phi = float(60 / 180.0 * math.pi)  # [rad]
         rospy.loginfo('set threshold_emergency_stop_phi: ' + str(self.threshold_emergency_stop_phi) + 'rad')
@@ -236,7 +236,7 @@ class Detector(DTROS):
                         ground_point = self.pixel2ground(pixel)
                         cylinder_point = self.ground2cylinder(ground_point)
                         rospy.loginfo('Detected safety-critical object has r=' + str(cylinder_point['r']))
-                        rospy.loginfo('Detected safety-critical object has phi=' + str(cylinder_point['phi']))
+                        # rospy.loginfo('Detected safety-critical object has phi=' + str(cylinder_point['phi']))
 
                         if cylinder_point['r'] < self.threshold_emergency_stop_r:
                             emergency_stop = True
