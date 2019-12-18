@@ -231,11 +231,14 @@ class Detector(DTROS):
                     # only project to ground, if pixel below horizon
                     # scale back to original camera image size
                     pixel_scaled = self.scale_pixel(pixel)
+                    rospy.loginfo("scaled pixel")
                     if pixel_scaled.v > self.horizon:
                         ground_point = self.pixel2ground(pixel)
                         cylinder_point = self.ground2cylinder(ground_point)
+                        rospy.loginfo('Detected safety-critical object has r='+str(cylinder_point['r']))
+                        rospy.loginfo('Detected safety-critical object has phi='+str(cylinder_point['phi']))
 
-                        if cylinder_point['r'] < self.threshold_emergency_stop_r \
+                    if cylinder_point['r'] < self.threshold_emergency_stop_r \
                                 and abs(cylinder_point['phi']) < self.threshold_emergency_stop_phi:
                             emergency_stop = True
 
