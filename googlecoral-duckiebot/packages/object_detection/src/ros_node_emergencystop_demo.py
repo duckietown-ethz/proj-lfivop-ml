@@ -147,7 +147,8 @@ class Detector(DTROS):
                 self.fps = str(prediction['FPS'])
                 self.draw_prediction(orig, prediction)
 
-            if self.frame_counter < 2:
+            # deactivate frame counter for the moment
+            if self.frame_counter < 0:
                 self.frame_counter += 1
             else:
                 self.frame_counter = 0
