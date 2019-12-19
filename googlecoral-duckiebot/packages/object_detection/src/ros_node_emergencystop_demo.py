@@ -46,7 +46,7 @@ class Detector(DTROS):
         # emergency stop model
         # option 1: ground_projection
         # option 2: image_box
-        self.emergency_stop_mode = int(os.getenv('EMGSTOP_STOP_MODE', 'image_box'))
+        self.emergency_stop_mode = str(os.getenv('EMGSTOP_STOP_MODE', 'image_box'))
 
         self.emergency_stop_braking_distance_multiple = float(os.getenv('EMGSTOP_STOP_BRAKING_DISTANCE_MULTIPLE', 3))
 
