@@ -39,13 +39,13 @@ If no model is specified, it will be set to "class_localization". Model name cho
 
 Other environment variables you can set:
 
-| environment varibale  | description | default | 
+| environment variable  | description | default | 
 | ------------- | ------------- |  ------------- | 
 | resolution_w | Width of image stream resolution. Height is set to 3/4 of width. For example, add "-e resolution_w=640"  to the docker run command above to set the resolution to 640x480px. | 320 |
 | threshold | Minimum confidence threshold for detected objects. For example, use 0.5 to receive only detected objects with a confidence equal-to or higher-than 0.5. | 0.5 |
 | top_k | The maximum number of detected objects to return. | 15 |
 
-Image stream with bounding boxes, scores, and lables is then published to topic:  
+Image stream with bounding boxes, scores, and labels is then published to topic:  
 ```
 [ROBOT_NAME]/coral_object_detection/image/compressed
 ```
@@ -61,7 +61,21 @@ Image stream with bounding boxes, scores, and lables is then published to topic:
 ```bash
 docker -H [ROBOT_NAME].local run -it --rm --net=host -v /dev/bus/usb:/dev/bus/usb -v /data:/data -e model_name=MODEL_NAME --privileged duckietown/proj-lfivop-ml:master-arm32v7 bash -c packages/launch_emergencystop_demo/emergencystop_demo.sh
 ```
-Your duckiebot will move in a straight line. It will stop when detect Duckie or Duckiebot close upfront with confidence level more than 60%.
+Your Duckiebot will move in a straight line. It will stop when it detects Duckies or Duckiebots close upfront with confidence level setted in the environmental variables.
+
+In order to improve robustness and stability of the emergency stop against single false negatives and false positives, 
+a vote count was implemented. Thus, a specific vote threshold is required to activate or deactivate the emergency stop.
+
+Additionally to the environmental variables in the standard inference, the following environmental variables can bet set
+for the emergency stop demo:
+
+| environment variable  | description | default | 
+| ------------- | ------------- |  ------------- | 
+| EMGSTOP_OBJDET_CONFIDENCE_THRESH | Required confidence in object detection, in order to activate emergency stop for a specific critical object. The default is 60%. | 0.6 |
+| EMGSTOP_STOP_MODE | Defines the mode for the emergency stop. Can be either `image_box`, which specifies a specific box within the image or `ground_projection` which judges using cylindrical coordinates | image_box |
+| EMGSTOP_STOP_BRAKING_DISTANCE_MULTIPLE | Trigger an emergency stop at the specified multiple of the braking distance | 3 |
+| EMGSTOP_STOP_VOTE_MAX | The vote count for an emergency stop is limited at this maximal value. | 30 |
+| EMGSTOP_STOP_VOTE_THRESH | The emergency stop is activated above and deactivated below this threshold. | 10 |
 
 ## Troubleshooting
 **1. I run the object detection inference and lane following at the same time, but my Duckiebot moves bizarrelly, especially at the intersection**
