@@ -272,6 +272,8 @@ Structure of working directory which must be attached as volume to container.
 | VAL_1_OF_N_IMAGES | Specifies the split of the validation set. 1 of every N images are assigned to the validation set. VAL_1_OF_N_IMAGES specifies N. | 10 |
 | TEST_1_OF_N_IMAGES | Specifies the split of the test set. 1 of every N images are assigned to the test set. TEST_1_OF_N_IMAGES specifies N. | 10 |
 | DUCKIEBOT_CALIBRATION_HOSTNAME | Specifies the hostname of the Duckiebot used to export the intrinsic and extrinsic camera calibration files to generate locational weights | default |
+| CLASSIFICATION_LOSS_CLASS_WEIGHT_MOD | Boolean which specifies, if safety-adjusted class weights should be used (currently implemented in `WeightedSigmoidClassificationLoss`) | 1 |
+| CLASSIFICATION_LOSS_LOCATIONAL_WEIGHT_MOD | Boolean which specifies, if safety-adjusted locational weights should be used (currently implemented in `WeightedSigmoidClassificationLoss`) | 1 |
 
 ## Troubleshooting and Tips 
 
