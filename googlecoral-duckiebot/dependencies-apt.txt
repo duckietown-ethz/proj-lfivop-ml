@@ -3,6 +3,4 @@ software-properties-common
 wget
 apt-transport-https
 gcc-4.9
-ros-kinetic-cv-bridge
 ros-kinetic-image-geometry
-ros-kinetic-vision-opencv
