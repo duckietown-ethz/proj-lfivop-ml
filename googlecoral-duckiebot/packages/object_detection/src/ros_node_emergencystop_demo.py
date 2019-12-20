@@ -177,11 +177,16 @@ class Detector(DTROS):
 
         except Exception as e:
             rospy.logerr("Exceptions: " + str(e))
-            correction_constant = 100 / 3
-            vel_left, vel_right = self.speedToCmd(0.15 * correction_constant, 0.15 * correction_constant)
-            self.msg_wheels_cmd.vel_left = vel_left
-            self.msg_wheels_cmd.vel_right = vel_right
-            self.pub_wheels.publish(self.msg_wheels_cmd)
+            if self.emergency_stop_vote > self.emergency_stop_vote_threshold:
+                self.msg_wheels_cmd.vel_left = 0
+                self.msg_wheels_cmd.vel_right = 0
+                self.pub_wheels.publish(self.msg_wheels_cmd)
+            else:
+                correction_constant = 100 / 3
+                vel_left, vel_right = self.speedToCmd(0.15 * correction_constant, 0.15 * correction_constant)
+                self.msg_wheels_cmd.vel_left = vel_left
+                self.msg_wheels_cmd.vel_right = vel_right
+                self.pub_wheels.publish(self.msg_wheels_cmd)
 
         # Render FPS
         textfps = "Inference FPS: {}".format(self.fps)
