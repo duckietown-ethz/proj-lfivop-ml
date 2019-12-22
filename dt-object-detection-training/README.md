@@ -149,7 +149,7 @@ scp -r lfivop-ml@idsc-rudolf.ethz.ch:/home/lfivop-ml/workdir/ YOUR_LOCAL_WORKDIR
 1. Stop all windows:
     1. Resume the screen session using `screen -r`
     2. Then cycle through all the windows (`Ctrl-a n`) and exit the window (`exit`) which will stop all running processes in the window
-2. Stopping all remaining running Docker containers
+2. Stop all remaining running Docker containers
     1. `docker ps` to find the container ids 
     2. `docker stop container_id` to stop the container
 3. Remove the working directory with `rm -r workdir`
@@ -202,7 +202,7 @@ exit
 The model.ckpt checkpoint was pre-trained on the Coco dataset and is used to fine-tune the neural neural network on initialization. 
 This model is not _quantized_. 
 
-Additional data augmentation (compared to the standard model) as for example 
+Additional data augmentation (compared to the standard model):
 - random_image_scale [0.75, 1.25]
 - random_adjust_brightness [1.20]
 - random_adjust_contrast [0.80, 1.25]
@@ -212,12 +212,12 @@ was added the the pipeline configuration.
 
 **dt_ssd_mobilenet_v2_quantized_320x320_coco**
 
-The model.ckpt checkpoint was pre-trained on the Coco dataset and then (using dt_ssd_mobilenet_v2_coco and additional data augmentation) for 50000 steps on the Duckietown dataset.
+The model.ckpt checkpoint was pre-trained on the Coco dataset and then trained (using dt_ssd_mobilenet_v2_coco and additional data augmentation) for 50000 steps on the Duckietown dataset.
 It is used to fine-tune the neural neural network on initialization and reduce the convergence time while training with quantization. 
 
 The pre-trained model is not quantized yet, however this model will quantize during training with a delay of 48000, 8 weight bits and 8 activation bits. 
 
-Additional data augmentation (compared to the standard model) as for example 
+Additional data augmentation (compared to the standard model):
 - random_image_scale [0.75, 1.25]
 - random_adjust_brightness [1.20]
 - random_adjust_contrast [0.80, 1.25]
