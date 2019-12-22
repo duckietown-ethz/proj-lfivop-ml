@@ -11,10 +11,9 @@ This respository details the steps on running object detection inference on a Du
 Image stream with bounding boxes, scores, and labels published to topic:  
 ` [ROBOT_NAME]/coral_object_detection/image/compressed `
 
-### Sample inference with lane following
+### Lane following with robust object detection
 
 [![Vimeo](https://github.com/duckietown-ethz/proj-lfivop-ml/wiki/images/lanefollowing_objdet.jpg)](https://player.vimeo.com/video/380723135  "DEMO results - Click to Watch!")
-
 
 
 ## Instructions to run the inference
@@ -123,7 +122,7 @@ for the emergency stop demo:
 
 ![Screenshot](https://github.com/duckietown-ethz/proj-lfivop-ml/wiki/images/failure.gif)
 
-Object detection inference uses up some CPU capacity of your Duckiebot, hence makes it slower in estimating lane. Decrease gain parameter to make it more stable (https://docs.duckietown.org/daffy/opmanual_duckiebot/out/wheel_calibration.html). Our test indicates lane following with gain parameter of 0.6 is stable in a well-lit robotarium. 
+Object detection inference uses up some CPU capacity of your Duckiebot, hence makes it slower in estimating lane. [Decrease gain parameter](https://docs.duckietown.org/daffy/opmanual_duckiebot/out/wheel_calibration.html) to make it more stable. Our test indicates lane following with gain parameter of 0.6 is stable in a well-lit robotarium. 
 
 :red_circle: **I run emergency stop demo. When I stop the container by pressing ctrl+c, my Duckiebot still moves.**
 
