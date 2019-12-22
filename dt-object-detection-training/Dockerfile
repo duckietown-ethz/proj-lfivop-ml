@@ -164,6 +164,8 @@ ENV NUM_TRAIN_STEPS=50000
 
 # export inference graph settings
 ENV CHECKPOINT_NUMBER=0
+ENV IMAGE_RESIZER_WIDTH=320
+ENV IMAGE_RESIZER_HEIGHT=320
 
 # needed if jupyter is used
 # EXPOSE 8888

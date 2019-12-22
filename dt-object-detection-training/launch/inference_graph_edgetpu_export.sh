@@ -31,7 +31,7 @@ tflite_convert \
   --output_file="${EXPORT_DIR}/tflite_graph.tflite" \
   --input_array="normalized_input_image_tensor" \
   --output_array='TFLite_Detection_PostProcess','TFLite_Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3' \
-  --input_shape=1,320,320,3 \
+  --input_shape=1,"${IMAGE_RESIZER_HEIGHT}","${IMAGE_RESIZER_WIDTH}",3 \
   --inference_type=QUANTIZED_UINT8 \
   --mean_values=128 \
   --std_dev_values=127 \

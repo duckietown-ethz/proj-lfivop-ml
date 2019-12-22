@@ -269,6 +269,8 @@ Structure of working directory which must be attached as volume to container.
 | CUDA_VISIBLE_DEVICES | The number of GPUs the TensorFlow will use during training on IDSC Rudolf | 1 |
 | NUM_TRAIN_STEPS | The number of training steps before TensorFlow stops the training. | 50000 |
 | CHECKPOINT_NUMBER | Specifies the training checkpoint, which should be used to export the inference graph (for example 50000) | 0 |
+| IMAGE_RESIZER_HEIGHT | Specify the same height [px] you stated for the image resizer in the `pipeline.conf`. This height is used as an input specification for the Edge-TPU inference graph | 320 |
+| IMAGE_RESIZER_WIDTH | Specify the same width [px] you stated for the image resizer in the `pipeline.conf`. This width is used as an input specification for the Edge-TPU inference graph | 320 |
 | VAL_1_OF_N_IMAGES | Specifies the split of the validation set. 1 of every N images are assigned to the validation set. VAL_1_OF_N_IMAGES specifies N. | 10 |
 | TEST_1_OF_N_IMAGES | Specifies the split of the test set. 1 of every N images are assigned to the test set. TEST_1_OF_N_IMAGES specifies N. | 10 |
 | DUCKIEBOT_CALIBRATION_HOSTNAME | Specifies the hostname of the Duckiebot used to export the intrinsic and extrinsic camera calibration files to generate locational weights | default |
